@@ -496,42 +496,42 @@ writePayload = () => {
 
             p1ejn: payload.punch1.precompression,
             p1main: payload.punch1.maincompression,
-            p1pre: payload.punch1.precompression,
+            p1pre: payload.punch1.ejection,
             p1status: payload.punch1.status,
 
             p2ejn: payload.punch2.precompression,
             p2main: payload.punch2.maincompression,
-            p2pre: payload.punch2.precompression,
+            p2pre: payload.punch2.ejection,
             p2status: payload.punch2.status,
 
             p3ejn: payload.punch3.precompression,
             p3main: payload.punch3.maincompression,
-            p3pre: payload.punch3.precompression,
+            p3pre: payload.punch3.ejection,
             p3status: payload.punch3.status,
 
             p4ejn: payload.punch4.precompression,
             p4main: payload.punch4.maincompression,
-            p4pre: payload.punch4.precompression,
+            p4pre: payload.punch4.ejection,
             p4status: payload.punch4.status,
 
             p5ejn: payload.punch5.precompression,
             p5main: payload.punch5.maincompression,
-            p5pre: payload.punch5.precompression,
+            p5pre: payload.punch5.ejection,
             p5status: payload.punch5.status,
 
             p6ejn: payload.punch6.precompression,
             p6main: payload.punch6.maincompression,
-            p6pre: payload.punch6.precompression,
+            p6pre: payload.punch6.ejection,
             p6status: payload.punch6.status,
 
             p7ejn: payload.punch7.precompression,
             p7main: payload.punch7.maincompression,
-            p7pre: payload.punch7.precompression,
+            p7pre: payload.punch7.ejection,
             p7status: payload.punch7.status,
 
             p8ejn: payload.punch8.precompression,
             p8main: payload.punch8.maincompression,
-            p8pre: payload.punch8.precompression,
+            p8pre: payload.punch8.ejection,
             p8status: payload.punch8.status,
 
             preavg: payload.precompression_avg,
