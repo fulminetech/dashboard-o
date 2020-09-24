@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Logs</title>
+    <meta name="description" content="8-Puch Tablet Press Dashboard">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- NPM package includes -->
+    <link href="/font/css/all.css" rel="stylesheet">
+    <script src="/charts/Chart.bundle.min.js"></script>
+    <link href="/css/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        .bg-black-alt {
+            background: #191919;
+        }
+
+        .text-black-alt {
+            color: #191919;
+        }
+
+        .border-black-alt {
+            border-color: #191919;
+        }
+    </style>
+
+
+    <!-- carousel CSS -->
+    <style>
+        .carousel-open:checked+.carousel-item {
+            position: static;
+            opacity: 100;
+        }
+    
+        .carousel-item {
+            -webkit-transition: opacity 0s ease-out;
+            transition: opacity 0s ease-out;
+        }
+    
+        #carousel-1:checked~.control-1,
+        #carousel-2:checked~.control-2,
+        #carousel-3:checked~.control-3 {
+            display: block;
+        }
+    
+        .carousel-indicators {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            bottom: 2%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+        }
+    
+        #carousel-1:checked~.control-1~.carousel-indicators li:nth-child(1) .carousel-bullet,
+        #carousel-2:checked~.control-2~.carousel-indicators li:nth-child(2) .carousel-bullet,
+        #carousel-3:checked~.control-3~.carousel-indicators li:nth-child(3) .carousel-bullet {
+            color: #2b6cb0;
+            /*Set to match the Tailwind colour you want the active one to be */
+        }
+    </style>
+
+    <!-- Toggle Button CSS -->
+    <style>
+        .toggle__dot {
+            top: -.25rem;
+            left: -.25rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input:checked~.toggle__dot {
+            transform: translateX(100%);
+            background-color: #48bb78;
+        }
+    </style>
+
+</head>
+
+<body class="bg-black-alt font-sans leading-normal tracking-normal">
+
+    <!-- NAVIGATION BAR -->
+    <nav id="header" class="bg-gray-900 fixed w-full z-10 bottom-0 shadow">
+        <div class="w-full  mx-auto flex flex-wrap items-center mt-0 pt-0 pb-3 md:pb-0">
+            <div class="w-full px-5 flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 bg-gray-900 md:text-center z-20"
+                id="nav-content">
+
+                <!-- HTML Pages -->
+                <ul class="list-reset uppercase text-md lg:flex flex-1 items-center px-4 md:px-0">
+
+                    <!-- Dashboard -->
+                    <li class="mr-6 my-2 md:my-0">
+                        <a href="/dashboard"
+                            class="block py-1 md:py-3 pl-1 align-middle text-gray-600 no-underline hover:text-gray-100 border-b-2 border-gray-900  hover:border-blue-400">
+                            <i class="fas fa-digital-tachograph fa-fw mr-3"></i>
+                            <span class="pb-3 md:pb-0">
+                                Dashboard
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- Reports -->
+                    <li class="mr-6 my-2 md:my-0">
+                        <a href="/reports"
+                            class="block py-1 md:py-3 pl-1 align-middle text-gray-600 no-underline hover:text-gray-100 border-b-2 border-gray-900  hover:border-pink-400">
+                            <i class="fas fa-cogs fa-fw mr-3"></i>
+                            <span class="pb-3 md:pb-0">
+                                Reports
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- Logs -->
+                    <li class="mr-6 my-2 md:my-0">
+                        <a href="/control"
+                            class="block py-1 md:py-3 pl-1 align-middle text-gray-100 no-underline hover:text-gray-100 border-b-2 border-gray-900  hover:border-green-400">
+                            <i class="fas fa-chart-area fa-fw mr-3"></i>
+                            <span class="pb-1 md:pb-0">
+                                Control
+                            </span>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- Search bar -->
+                <div class="relative pull-right pl-4 pr-4 md:pr-0">
+                    <input type="search" placeholder="Search"
+                        class="w-full bg-gray-900 text-sm text-gray-400 transition border border-gray-800 focus:outline-none focus:border-gray-600 rounded py-1 px-2 pl-10 appearance-none leading-normal">
+                    <div class="absolute search-icon" style="top: 0.375rem;left: 1.75rem;">
+                        <svg class="fill-current pointer-events-none text-gray-500 w-4 h-4"
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path
+                                d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Time  -->
+                <div class="flex relative pl-4 inline-block float-right select-none">
+                    <div id="time" class="align-middle text-l text-gray-400">Loading..</div>
+                    <i class="align-middle cursor-pointer text-xl pt-1 text-gray-400 pl-3 px-2 fas fa-sign-out-alt"
+                        onclick="logout()"></i>
+                </div>
+
+            </div>
+
+        </div>
+    </nav>
+
+        <!--Container-->
+        <div class="w-full pb-10">
+            <div class="w-full md:flex xl:flex px-0 md:px-0 md:mt-2 mb-2 text-gray-800 leading-normal" style="height:90vh;">
+        
+        
+                <!-- Metric Cards -->
+                <div class="flex-wrap select-none md:w-1/4 xl:w-1/4">
+        
+                    <!-- Batch List Metric Card-->
+                    <div class="w-full p-3">
+                        <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
+                            <div class="flex flex-row items-center">
+                                <div class="flex-1 pt-3 text-center">
+                                    <h5 class="font-bold text-3xl uppercase text-gray-400"> Batch List
+                                    </h5>
+                                    <h3 class="font-bold uppercase text-gray-400">
+                                        Batch Table:
+                                    </h3>
+                                    <h3 class="font-bold text-3xl uppercase text-gray-400">
+                                        23
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!--Divider-->
+                    <hr class="border-b-2 border-gray-600 my-4 mx-4">
+        
+                    <!-- Batch List -->
+                    <div class="w-full p-3">
+                        <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
+                            <div class="flex flex-row items-center">
+                                <div class="flex-1 pt-3 text-center">
+                                    <h5 class="font-bold uppercase text-gray-400"> Batch list goes here!
+                                        <a id="operator_name_metric" class="font-bold text-2xl text-gray-500">
+                                        </a>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Reports -->
+                <div class="flex select-none flex-wrap md:w-3/4 xl:w-3/4">
+        
+                    <!-- Carousel HTML -->
+                    <div class="carousel w-full p-3">
+                        <!-- Realtime Slide - 1 -->
+                        <div class="carousel-inner relative overflow-hidden w-full">
+                            <!--Main slide-->
+                            <input class="carousel-open" type="radio" id="carousel-1" name="carousel" aria-hidden="true"
+                                hidden="" checked="checked">
+                            <div class="carousel-item absolute opacity-0 border overflow-y-auto border-gray-800 rounded shadow"
+                                style="height:90vh;">
+                                <div class="flex flex-wrap w-full text-center">
+        
+                                    <!-- Control Panel Banner -->
+                                    <div class="w-full p-3">
+                                        <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
+                                            <div class="flex flex-row items-center">
+                                                <div class="flex-shrink px-4">
+                                                    <div class="rounded p-3 bg-indigo-600"><i
+                                                            class="fab fa-connectdevelop fa-pulse fa-2x fa-fw fa-inverse"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 text-right md:text-center">
+                                                    <h3 class="font-bold uppercase text-3xl p-3 text-gray-400">
+                                                        Control Panel
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                </div>
+                            </div>
+                            <label for="carousel-2"
+                                class="next control-1 w-10 h-10 mb-5 md:mr-5 absolute cursor-pointer hidden text-3xl font-bold opacity-25 text-black rounded-full bg-white hover:opacity-100 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
+                        </div>
+        
+                        <!-- Realtime Slide - 2 -->
+                        <div class="carousel-inner relative overflow-hidden w-full">
+                            <!--Main slide-->
+                            <input class="carousel-open" type="radio" id="carousel-2" name="carousel" aria-hidden="true"
+                                hidden="">
+                            <div class="carousel-item absolute opacity-0 border overflow-y-auto border-gray-800 rounded shadow"
+                                style="height:90vh;">
+                                <div class="flex flex-wrap w-full text-center">
+        
+                                    <!-- Guages Banner -->
+                                    <div class="w-full p-3">
+                                        <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
+                                            <div class="flex flex-row items-center">
+                                                <div class="flex-shrink px-4">
+                                                    <div class="rounded p-3 bg-indigo-600"><i
+                                                            class="fab fa-connectdevelop fa-pulse fa-2x fa-fw fa-inverse"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 text-right md:text-center">
+                                                    <h3 class="font-bold uppercase text-3xl p-3 text-gray-400">
+                                                        Guages
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <!--Compression Data table -->
+                                    <div class="w-full xl:w-1/3 p-3">
+                                        <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                            <div class="border-b border-gray-800 p-3">
+                                                <h5 class="font-bold uppercase text-center text-gray-400">Compression
+                                                    Data Table</h5>
+                                            </div>
+                                            <div class="px-5 pb-5">
+                                                <table class="table-fixed w-full text-center text-gray-400" height="170rem">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center py-3">Punch Number</th>
+                                                            <th class="text-center py-3">PRE <br> (kN)</th>
+                                                            <th class="text-center py-3">MAIN <br> (kN)</th>
+                                                            <th class="text-center py-3">EJECTION <br> (kN)</th>
+                                                        </tr>
+                                                    </thead>
+        
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="border border-gray-700 px-4 py-2">1B
+                                                                <div id="p1-status" class="rounded p-1 bg-green-600"></div>
+                                                            </td>
+                                                            <td id="p1-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p1-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p1-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+        
+                                                        <tr>
+                                                            <td class="border border-gray-700 px-4 py-2">1D
+                                                                <div id="p2-status" class="rounded p-1 bg-green-600"></div>
+                                                            </td>
+                                                            <td id="p2-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p2-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p2-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+        
+                                                        <tr>
+                                                            <td class="border border-gray-700 px-4 py-2">2B
+                                                                <div id="p3-status" class="rounded p-1 bg-green-600"></div>
+                                                            </td>
+                                                            <td id="p3-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p3-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p3-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+        
+                                                        <tr>
+                                                            <td class="border border-gray-700 px-4 py-2">2D
+                                                                <div id="p4-status" class="rounded p-1 bg-green-600"></div>
+                                                            </td>
+                                                            <td id="p4-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p4-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p4-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+        
+                                                        <tr>
+                                                            <td class="border border-gray-700 px-4 py-2">3B
+                                                                <div id="p5-status" class="rounded p-1 bg-green-600"></div>
+                                                            </td>
+                                                            <td id="p5-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p5-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p5-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+        
+                                                        <tr>
+                                                            <td class="border border-gray-700 px-4 py-2">3D
+                                                                <div id="p6-status" class="rounded p-1 bg-green-600"></div>
+                                                            </td>
+                                                            <td id="p6-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p6-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p6-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+        
+                                                        <tr>
+                                                            <td class="border border-gray-700 px-4 py-2">4B
+                                                                <div id="p7-status" class="rounded p-1 bg-green-600"></div>
+                                                            </td>
+                                                            <td id="p7-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p7-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p7-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+        
+                                                        <tr>
+                                                            <td class="border border-gray-700 px-4 py-2">4D
+                                                                <div id="p8-status" class="rounded p-1 bg-green-600"></div>
+                                                            </td>
+                                                            <td id="p8-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p8-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="p8-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+                                                        <tr>
+                                                            <td class="border border-gray-700 font-bold px-4 py-2">Avg
+                                                            <td id="avg-pre" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="avg-main" class="border border-gray-700 px-4 py-2"></td>
+                                                            <td id="avg-ejn" class="border border-gray-700 px-4 py-2"></td>
+                                                        </tr>
+        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                </div>
+                            </div>
+                            <label for="carousel-1"
+                                class="prev control-2 w-10 h-10 mb-5 md:ml-5 absolute cursor-pointer hidden text-3xl font-bold opacity-25 text-black rounded-full bg-white hover:opacity-100 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
+        
+                        </div>
+        
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Time -->
+    <script>
+        time = new Date().toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', hour12: true, timeZone: 'Asia/Kolkata' });
+        setInterval(() => {
+            document.getElementById("time").innerHTML = new Date().toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', hour12: true, timeZone: 'Asia/Kolkata' });
+            document.getElementById("feeder_activity_metric").innerHTML = time;
+            document.getElementById("machine_activity_metric").innerHTML = time;
+        }, 1000);
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<!-- component -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboard</title>
+    <meta name="author" content="Maruti M.">
+    <meta name="description" content="">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+
+    <!-- NPM package includes -->
+    <link href="/font/css/all.css" rel="stylesheet">
+    <script src="/charts/Chart.bundle.min.js"></script>
+    <link href="/css/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
+
+        .font-family-karla {
+            font-family: karla;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex font-family-karla justify-center">
+        <!-- On boarding card -->
+        <div class="leading-loose w-1/3 pt-20">
+
+            <p class="text-gray-800 text-4xl uppercase text-bold text-center font-medium">Batch settings</p>
+
+            <div class="mt-2">
+                <label class="block text-lg text-gray-900">Name</label>
+                <form id="name">
+                    <input class="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded" name="name" type="text"
+                        required="" placeholder="Operator Name">
+                </form>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-lg text-gray-900">Machine ID</label>
+                <label class="w-full px-4 py-2 text-gray-700 bg-gray-200 rounded">8_PUNCH</label>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-lg text-gray-900">Batch Number</label>
+                <form id="batch">
+                    <input class="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded" name="batch" type="text"
+                        required="" placeholder="Current Batch Number">
+                </form>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-lg text-gray-900" for="recepie">Recepie ID</label>
+                <form id="recepie">
+                    <input class="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded" name="recepie" type="text"
+                        required="" placeholder="Current Recepie ID">
+                </form>
+            </div>
+
+            <div class="mt-2">
+                <label class=" block text-lg text-gray-900">Start Time</label>
+                <label id="time" class="w-full px-4 py-2 text-gray-700 bg-gray-200 rounded"></label>
+            </div>
+
+            <div class="mt-4 flex justify-center">
+                <button onclick="start()"
+                    class="px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded">START</button>
+
+            </div>
+
+            <div class="mt-4 flex justify-center">
+                <label class=" block text-lg text-gray-900">--== OR ==--</label>
+            </div>
+
+            <div class="mt-4 flex justify-center">
+                <label class=" block text-bold text-lg text-gray-900">Continue previous batch</label>
+            </div>
+
+
+            <div class="mt-4 flex justify-center">
+                <button onclick="continuee()"
+                    class="px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded">CONTINUE</button>
+            </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Time -->
+    <script>
+        setInterval(() => {
+            document.getElementById("time").innerHTML = new Date().toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', hour12: true, timeZone: 'Asia/Kolkata' });
+        }, 1000);
+    </script>
+
+    <!-- submit -->
+    <script>
+
+        const onboardurl = 'http://10.0.0.65:3000/onboard'
+
+        addEventListener("keydown", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                start();
+            }
+        });
+
+        function start() {
+            var a = document.getElementById("name");
+            var name = "";
+            var i;
+            for (i = 0; i < a.length; i++) {
+                name += a.elements[i].value;
+            }
+
+            var b = document.getElementById("batch");
+            var batch = "";
+            var j;
+            for (j = 0; j < b.length; j++) {
+                batch += b.elements[j].value;
+            }
+
+            var c = document.getElementById("recepie");
+            var recepie = "";
+            var k;
+            for (k = 0; k < c.length; k++) {
+                recepie += c.elements[k].value;
+            }
+
+            var machine = "8_PUNCH";
+
+            submitt(name, batch, recepie, machine)
+
+        };
+
+        async function submitt(name, batch, recepie, machine) {
+            let submiturl = `${onboardurl}/${name}/${machine}/${recepie}/${batch}`
+            await fetch(submiturl)
+                .then(setTimeout(() => {
+                    location.href = "/dashboard"
+                }, 100))
+                .catch(console.error);
+
+            // .then(location.href = "/dashboard")
+        }
+
+        // // Fetch previous settings are start the dashboard
+        async function continuee() {
+            location.href = "/reports"
+        }
+
+    </script>
+
+</body>
+
+</html>

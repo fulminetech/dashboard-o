@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+
+    <link href="/css/tailwind.min.css" rel="stylesheet">
+
+
+</head>
+
+<body onload="searchBatch()">
+
+
+    <p class="pt-5 text-gray-800 text-5xl uppercase text-bold text-center font-medium">ADEPT PVT LTD</p>
+    <p class="pt-2 text-gray-700 text-2xl uppercase text-bold text-center font-medium">8 Punch Machine</p>
+    <h3 class="text-xl px-10 pt-10 pb-5 text-gray-700 text-left">Batch Number:
+        <a id="batch_number_metric" class="font-bold text-gray-900">
+        </a>
+    </h3>
+    <h3 class="text-xl px-10 pt-2 pb-5 text-gray-700 text-left">From (rotation number):
+        <a id="from" class="font-bold text-gray-900">
+        </a>
+    </h3>
+    <h3 class="text-xl px-10 pt-2 pb-5 text-gray-700 text-left">To (rotation number):
+        <a id="to" class="font-bold text-gray-900">
+        </a>
+    </h3>
+    <h3 class="text-xl px-10 pt-2 pb-5 text-gray-700 text-left">Created on:
+        <a id="time" class="font-bold text-gray-900">
+        </a>
+    </h3>
+
+    <div class="px-10 pt-5 pb-5">
+        <table class="table-fixed w-full text-center text-gray-900" height="170rem">
+            <thead>
+                <tr>
+                    <th class="text-center py-3">Rotation</th>
+                    <th class="text-center py-3">PRE AVG (kN)</th>
+                    <th class="text-center py-3">MAIN AVG (kN)</th>
+                    <th class="text-center py-3">EJECTION AVG (kN)</th>
+                </tr>
+            </thead>
+            <tbody id="avgtable">
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Time -->
+    <script>
+        time = new Date().toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', hour12: true, timeZone: 'Asia/Kolkata' });
+        document.getElementById("time").innerHTML = new Date().toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', hour12: true, timeZone: 'Asia/Kolkata' });
+    </script>
+
+    <!-- Generate report -->
+    <script>
+        const host = 'http://10.0.0.65:3000'
+
+        const reportdetailsURL = `${host}/report/average/now`
+        const generatereportURL = `${host}/report/average/generate`
+
+        async function searchBatch() {
+
+            const reportData1 = await fetch(reportdetailsURL);
+            const report = await reportData1.json();
+
+            let from = report.from;
+            let to = report.to;
+
+            document.getElementById("from").innerHTML = from;
+            document.getElementById("to").innerHTML = to;
+
+            document.getElementById("batch_number_metric").innerHTML = report.batch;
+
+            const queryAvgURL = `${host}/api/search/average/csv/${report.batch}`
+
+            const avgData = await fetch(queryAvgURL);
+            const avggbatch = await avgData.json();
+
+            let avglistt = avggbatch;
+
+            console.log()
+
+            function loadavglist() {
+                const avgListBody = document.getElementById('avgtable');
+                let avgHTML = '';
+
+                let i = -1;
+
+                for (let avgg of avglistt) {
+                    i++;
+                    if (i >= from && i <= to) {
+                        from++;
+                        let avgdataa = avggbatch[i]
+                        avgHTML += `<tr><td class="border border-gray-700 px-4 py-2">${avgdataa[1]}</td><td id="p1-pre" class="border border-gray-700 px-4 py-2">${avgdataa[2]}</td><td class="border border-gray-700 px-4 py-2">${avgdataa[3]}</td><td id="p1-ejn" class="border border-gray-700 px-4 py-2">${avgdataa[4]}</td></tr>`
+                    } else if (i > to) {
+                        // await fetch(generatereportURL);
+                    }
+                }
+
+                avgListBody.innerHTML = avgHTML;
+            }
+
+            loadavglist();
+        }
+
+
+    </script>
+</body>
+
+</html>

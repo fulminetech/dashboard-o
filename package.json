@@ -1,0 +1,30 @@
+{
+  "name": "version2",
+  "version": "2.1.0",
+  "description": "PDF export live",
+  "main": "index.js",
+  "scripts": {
+    "dev": "echo [ NO DEV CONFIG ] ",
+    "live": "npm install && pm2 start routes.js && pm2 save && pm2 startup",
+    "build:css": "tailwind build src/style.css -o html/style.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@influxdata/influxdb-client": "^1.5.0",
+    "@types/node": "^14.0.23",
+    "body-parser": "^1.19.0",
+    "chart.js": "^2.9.3",
+    "cron": "^1.8.2",
+    "express": "^4.17.1",
+    "influxdb-nodejs": "^3.1.0",
+    "modbus-serial": "^8.0.0",
+    "moment": "^2.27.0",
+    "nodemon": "^2.0.4",
+    "onoff": "^6.0.0",
+    "puppeteer": "^5.3.1",
+    "tailwindcss": "^1.4.6"
+  }
+}

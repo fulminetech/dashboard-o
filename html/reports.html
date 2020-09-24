@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Reports</title>
+    <meta name="description" content="8-Puch Tablet Press Dashboard">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+
+    <!-- NPM package includes -->
+    <link href="/font/css/all.css" rel="stylesheet">
+    <script src="/charts/Chart.bundle.min.js"></script>
+    <link href="/css/tailwind.min.css" rel="stylesheet">
+
+    <!-- BackGround Info -->
+    <style>
+        .bg-black-alt {
+            background: #191919;
+        }
+
+        .text-black-alt {
+            color: #191919;
+        }
+
+        .border-black-alt {
+            border-color: #191919;
+        }
+    </style>
+
+    <!-- carousel CSS -->
+    <style>
+        .carousel-open:checked+.carousel-item {
+            position: static;
+            opacity: 100;
+        }
+
+        .carousel-item {
+            -webkit-transition: opacity 0s ease-out;
+            transition: opacity 0s ease-out;
+        }
+
+        #carousel-1:checked~.control-1,
+        #carousel-2:checked~.control-2,
+        #carousel-3:checked~.control-3 {
+            display: block;
+        }
+
+        .carousel-indicators {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            bottom: 2%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+        }
+
+        #carousel-1:checked~.control-1~.carousel-indicators li:nth-child(1) .carousel-bullet,
+        #carousel-2:checked~.control-2~.carousel-indicators li:nth-child(2) .carousel-bullet,
+        #carousel-3:checked~.control-3~.carousel-indicators li:nth-child(3) .carousel-bullet {
+            color: #2b6cb0;
+            /*Set to match the Tailwind colour you want the active one to be */
+        }
+    </style>
+
+</head>
+
+<body class="bg-black-alt font-sans overflow-hidden leading-normal tracking-normal" onload="batchtable()">
+
+    <!-- NAVIGATION BAR -->
+    <nav id="header" class="bg-gray-900 fixed w-full z-10 bottom-0 shadow">
+        <div class="w-full  mx-auto flex flex-wrap items-center mt-0 pt-0 pb-3 md:pb-0">
+            <div class="w-full px-5 flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 bg-gray-900 md:text-center z-20"
+                id="nav-content">
+
+                <!-- HTML Pages -->
+                <ul class="list-reset uppercase text-md lg:flex flex-1 items-center px-4 md:px-0">
+
+                    <!-- Dashboard -->
+                    <li class="mr-6 my-2 md:my-0">
+                        <a href="/dashboard"
+                            class="block py-1 md:py-3 pl-1 align-middle text-gray-600 no-underline hover:text-gray-100 border-b-2 border-gray-900  hover:border-blue-400">
+                            <i class="fas fa-digital-tachograph fa-fw mr-3"></i>
+                            <span class="pb-3 md:pb-0">
+                                Dashboard
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- Reports -->
+                    <li class="mr-6 my-2 md:my-0">
+                        <a href="/reports"
+                            class="block py-1 md:py-3 pl-1 align-middle text-gray-100 no-underline hover:text-gray-100 border-b-2 border-gray-900  hover:border-pink-400">
+                            <i class="fas fa-cogs fa-fw mr-3"></i>
+                            <span class="pb-3 md:pb-0">
+                                Reports
+                            </span>
+                        </a>
+                    </li>
+
+                    <!-- Control -->
+                    <li class="mr-6 my-2 md:my-0">
+                        <a href="/control"
+                            class="block py-1 md:py-3 pl-1 align-middle text-gray-600 no-underline hover:text-gray-100 border-b-2 border-gray-900  hover:border-green-400">
+                            <i class="fas fa-chart-area fa-fw mr-3"></i>
+                            <span class="pb-1 md:pb-0">
+                                Control
+                            </span>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- Search bar -->
+                <div class="relative pull-right pl-4 pr-4 md:pr-0">
+                    <input type="search" placeholder="Search"
+                        class="w-full bg-gray-900 text-sm text-gray-400 transition border border-gray-800 focus:outline-none focus:border-gray-600 rounded py-1 px-2 pl-10 appearance-none leading-normal">
+                    <div class="absolute search-icon" style="top: 0.375rem;left: 1.75rem;">
+                        <svg class="fill-current pointer-events-none text-gray-500 w-4 h-4"
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path
+                                d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Time  -->
+                <div class="flex relative pl-4 inline-block float-right select-none">
+                    <div id="time" class="align-middle text-l text-gray-400">Loading..</div>
+                    <i class="align-middle cursor-pointer text-xl pt-1 text-gray-400 pl-3 px-2 fas fa-sign-out-alt"
+                        onclick="logout()"></i>
+                </div>
+
+            </div>
+        </div>
+        </div>
+    </nav>
+
+    <!--Container-->
+    <div class="w-full pb-10">
+        <div class="w-full md:flex xl:flex px-0 md:px-0 md:mt-2 mb-2 text-gray-800 leading-normal" style="height:90vh;">
+
+
+            <!-- Metric Cards -->
+            <div class="flex-wrap select-none md:w-1/5 xl:w-1/5">
+                <!-- Batch List -->
+                <div class="w-full p-3">
+                    <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
+                        <div class="flex flex-row items-center">
+                            <div class="flex-1 text-center">
+
+                                <!-- Batch List -->
+                                <div class="w-full overflow-y-auto select-text p-3">
+                                    <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                        <div class="border-b border-gray-800 p-3">
+                                            <h5 class="font-bold uppercase text-center text-3xl text-gray-400">Total
+                                                Batches:
+                                                <a id="batchcount" class="font-bold text-4xl text-gray-500">
+                                                </a>
+                                            </h5>
+                                        </div>
+                                        <div class="px-5 pb-5">
+                                            <table class="table-fixed w-full text-center text-gray-400" height="170rem">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center py-3">Sr. No.</th>
+                                                        <th class="text-center py-3">Batch Name</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody id="batchlist">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports -->
+            <div class="flex select-none flex-wrap md:w-4/5 xl:w-4/5">
+
+                <!-- Carousel HTML -->
+                <div class="carousel w-full p-3">
+                    <!-- Realtime Slide - 1 -->
+                    <div class="carousel-inner relative overflow-hidden w-full">
+                        <!--Main slide-->
+                        <input class="carousel-open" type="radio" id="carousel-1" name="carousel" aria-hidden="true"
+                            hidden="" checked="checked">
+                        <div class="carousel-item absolute opacity-0 border overflow-y-auto border-gray-800 rounded shadow"
+                            style="height:90vh;">
+                            <div class="flex flex-wrap w-full text-center">
+
+                                <!-- Reports Banner -->
+                                <div class="w-full p-3">
+                                    <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
+                                        <div class="flex flex-row items-center">
+                                            <div class="flex-shrink px-4">
+                                                <div class="rounded p-3 bg-indigo-600"><i
+                                                        class="fab fa-connectdevelop fa-pulse fa-2x fa-fw fa-inverse"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 text-right md:text-center">
+                                                <h3 class="font-bold uppercase text-3xl p-3 text-gray-400">
+                                                    Reports
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Search Batch -->
+                                <div class="w-full p-3">
+                                    <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                        <div class="flex flex-row items-center">
+
+                                            <div class="flex-1 pl-3">
+                                                <h5 class="font-bold uppercase text-3xl py-2 text-gray-400">
+                                                    Search Batch
+                                                </h5>
+                                            </div>
+
+                                            <form id="batchname" class="px-6">
+                                                <input
+                                                    class="bg-blue-100 focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-2 block w-60"
+                                                    type="text" placeholder="">
+                                            </form>
+
+                                            <!-- Search Button -->
+                                            <div class="pr-3">
+                                                <button
+                                                    class="bg-blue-100 uppercase text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"
+                                                    onclick="searchBatch()">
+                                                    SEARCH
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- PDF report options Banner -->
+                                <div class="w-full p-3">
+                                    <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                        <div class="flex flex-row items-center">
+
+                                            <div class="flex-1 pl-3">
+                                                <h3 class="font-bold uppercase text-3xl p-3 text-gray-400">
+                                                    Start Rotation:
+                                                </h3>
+                                            </div>
+
+                                            <form id="fromRotationNumber" class="px-6">
+                                                <input
+                                                    class="bg-blue-100 focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-2 block w-40"
+                                                    type="number" placeholder="FROM">
+                                            </form>
+
+                                            <div class="flex-1 pl-3">
+                                                <h3 class="font-bold uppercase text-3xl p-3 text-gray-400">
+                                                    Stop Rotation:
+                                                </h3>
+                                            </div>
+
+                                            <form id="toRotationNumber" class="px-6">
+                                                <input
+                                                    class="bg-blue-100 focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-2 block w-40"
+                                                    type="number" placeholder="TO">
+                                            </form>
+
+                                            <!-- Search Button -->
+                                            <div class="px-2">
+                                                <button
+                                                    class="bg-blue-100 uppercase text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"
+                                                    onclick="generateReport()">
+                                                    PDF report
+                                                </button>
+                                            </div>
+
+                                            <div class="flex-1 pl-3">
+                                                <h3 class="font-bold uppercase text-3xl p-3 text-gray-400">
+                                                    -- OR --
+                                                </h3>
+                                            </div>
+
+                                            <!-- Search Button -->
+                                            <div class="pr-3">
+                                                <button
+                                                    class="bg-blue-100 uppercase text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"
+                                                    onclick="csvexport()">
+                                                    CSV EXPORT
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Rotation Avg List -->
+                                <div class="w-full p-3">
+                                    <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                        <div class="border-b border-gray-800 p-3">
+                                            <h5 class="font-bold uppercase text-center text-3xl text-gray-400">Total
+                                                Rotations:
+                                                <a id="totalrotations" class="font-bold text-3xl text-gray-500">
+                                                </a>
+                                            </h5>
+                                        </div>
+                                        <div class="px-5 pb-5">
+                                            <table class="table-fixed w-full text-center text-gray-400" height="170rem">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center py-3">Rotation</th>
+                                                        <th class="text-center py-3">PRE AVG <br> (kN)</th>
+                                                        <th class="text-center py-3">MAIN AVG <br> (kN)</th>
+                                                        <th class="text-center py-3">EJECTION AVG <br> (kN)</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody id="avgtable">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <label for="carousel-2"
+                            class="next control-1 w-10 h-10 mb-5 md:mr-5 absolute cursor-pointer hidden text-3xl font-bold opacity-25 text-black rounded-full bg-white hover:opacity-100 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
+                    </div>
+
+                    <!-- Realtime Slide - 2 -->
+                    <div class="carousel-inner relative overflow-hidden w-full">
+                        <!--Main slide-->
+                        <input class="carousel-open" type="radio" id="carousel-2" name="carousel" aria-hidden="true"
+                            hidden="">
+                        <div class="carousel-item absolute opacity-0 border overflow-y-auto border-gray-800 rounded shadow"
+                            style="height:90vh;">
+                            <div class="flex flex-wrap w-full text-center">
+
+                                <!-- Reports Banner -->
+                                <div class="w-full p-3">
+                                    <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
+                                        <div class="flex flex-row items-center">
+                                            <div class="flex-shrink px-4">
+                                                <div class="rounded p-3 bg-indigo-600"><i
+                                                        class="fab fa-connectdevelop fa-pulse fa-2x fa-fw fa-inverse"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 text-right md:text-center">
+                                                <h3 class="font-bold uppercase text-3xl p-3 text-gray-400">
+                                                    Average Table
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <label for="carousel-1"
+                            class="prev control-2 w-10 h-10 mb-5 md:ml-5 absolute cursor-pointer hidden text-3xl font-bold opacity-25 text-black rounded-full bg-white hover:opacity-100 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time -->
+    <script>
+        time = new Date().toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', hour12: true, timeZone: 'Asia/Kolkata' });
+        setInterval(() => {
+            document.getElementById("time").innerHTML = new Date().toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium', hour12: true, timeZone: 'Asia/Kolkata' });
+        }, 1000);
+    </script>
+
+    <!-- URL -->
+    <script>
+        let host = 'http://10.0.0.65:3000'
+    </script>
+
+    <!-- Update Batch details -->
+    <script>
+        const batchURL = `${host}/api/search/batch`;
+
+        async function batchtable() {
+            const batchResponse = await fetch(batchURL);
+            const batch = await batchResponse.json();
+
+            document.getElementById("batchcount").innerHTML = batch.batchcount;
+
+            console.log(batch.batchnames);
+
+            let batchlistt = batch.batchnames;
+
+            loadbatchlist();
+
+            function loadbatchlist() {
+                const batchListBody = document.getElementById('batchlist');
+                let batchHTML = '';
+
+                let i = -1;
+                let j = 0;
+                for (let batchh of batchlistt) {
+                    i++;
+                    j++;
+                    batchHTML += `<tr><td class="border border-gray-700 px-4 py-2">${j}</td><td class="border border-gray-700 px-4 py-2">${batchlistt[i]}</td></tr>`
+                }
+
+                batchListBody.innerHTML = batchHTML;
+            }
+        }
+    </script>
+
+    <!-- Search Avg Data -->
+    <script>
+        const searchAvgURL = `${host}/api/search/average/`
+
+        addEventListener("keydown", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+
+                searchBatch();
+
+            }
+        });
+
+        async function searchBatch() {
+            var a = document.getElementById("batchname");
+            var name = "";
+            var i;
+            for (i = 0; i < a.length; i++) {
+                name += a.elements[i].value;
+            }
+
+            var queryAvgURL = `${searchAvgURL}${name}`
+
+            const avgData = await fetch(queryAvgURL);
+            const avggbatch = await avgData.json();
+
+            document.getElementById("totalrotations").innerHTML = avggbatch.totalrotations;
+
+            let avglistt = avggbatch.data;
+
+            function loadavglist() {
+                const avgListBody = document.getElementById('avgtable');
+                let avgHTML = '';
+
+                let i = -1;
+                for (let avgg of avglistt) {
+                    i++;
+                    let avgdataa = avggbatch.data[i]
+                    avgHTML += `<tr><td class="border border-gray-700 px-4 py-2">${avgdataa[1]}</td><td id="p1-pre" class="border border-gray-700 px-4 py-2">${avgdataa[2]}</td><td class="border border-gray-700 px-4 py-2">${avgdataa[3]}</td><td id="p1-ejn" class="border border-gray-700 px-4 py-2">${avgdataa[4]}</td></tr>`
+                }
+
+                avgListBody.innerHTML = avgHTML;
+            }
+
+            loadavglist();
+        }
+    </script>
+
+    <!-- Generate PDF Report -->
+    <script>
+        async function generateReport() {
+            var a = document.getElementById("fromRotationNumber");
+            var fromname = "";
+            var i;
+            for (i = 0; i < a.length; i++) {
+                fromname += a.elements[i].value;
+            }
+
+            var b = document.getElementById("toRotationNumber");
+            var toname = "";
+            var j;
+            for (j = 0; j < b.length; j++) {
+                toname += b.elements[j].value;
+            }
+
+            var c = document.getElementById("batchname");
+            var bname = "";
+            var k;
+            for (k = 0; k < c.length; k++) {
+                bname += c.elements[k].value;
+            }
+
+            const reportAvgURL = `${host}/report/average`
+            var queryAvgURL = `${reportAvgURL}/${bname}/${fromname}/${toname}`
+            await fetch(queryAvgURL);
+
+            const reportAvgGenURL = `${host}/report/average/generate`
+            await fetch(reportAvgGenURL);
+        }
+    </script>
+
+    <!-- CSV Export -->
+    <script>
+        function exportToCsv(filename, rows) {
+            var processRow = function (row) {
+                var finalVal = '';
+                for (var j = 0; j < row.length; j++) {
+                    var innerValue = row[j] === null ? '' : row[j].toString();
+                    if (row[j] instanceof Date) {
+                        innerValue = row[j].toLocaleString();
+                    };
+                    var result = innerValue.replace(/"/g, '""');
+                    if (result.search(/("|,|\n)/g) >= 0)
+                        result = '"' + result + '"';
+                    if (j > 0)
+                        finalVal += ',';
+                    finalVal += result;
+                }
+                return finalVal + '\n';
+            };
+
+            var csvFile = '';
+            for (var i = 0; i < rows.length; i++) {
+                csvFile += processRow(rows[i]);
+            }
+
+            var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+            if (navigator.msSaveBlob) { // IE 10+
+                navigator.msSaveBlob(blob, filename);
+            } else {
+                var link = document.createElement("a");
+                if (link.download !== undefined) { // feature detection
+                    // Browsers that support HTML5 download attribute
+                    var url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", filename);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        }
+
+        async function csvexport() {
+
+            var a = document.getElementById("batchname");
+            var name = "";
+            var i;
+            for (i = 0; i < a.length; i++) {
+                name += a.elements[i].value;
+            }
+
+            var csvAvgURL = `${searchAvgURL}csv/${name}`;
+
+            const batchResponse = await fetch(csvAvgURL);
+            const csvdata = await batchResponse.json();
+
+            csvdata[0] = ['Time', 'Rotation', 'Pre Avg', 'Main Avg', 'Ejn Avg']
+
+            if (typeof csvdata !== 'undefined' && csvdata.length > 0) {
+                exportToCsv(`${name}.csv`, csvdata)
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
