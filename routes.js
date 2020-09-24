@@ -174,7 +174,7 @@ app.get("/api/search/average/csv/:batch", (req, res) => {
                 var response = data.results[0].series[0].values
                 avg.totalrotations = response.length - 1
                 avg.data = response
-                 
+
                 res.json(avg.data)
             })
             .catch(console.error);
@@ -226,11 +226,23 @@ app.get("/report/average/generate", (req, res) => {
         await page.goto('http://10.0.0.65:3000/report/template', { waitUntil: 'networkidle0' });
         await page.pdf({ path: `batch_${report.batch}_from_${report.from}_to_${report.to}.pdf`, format: 'A4' });
         await browser.close();
-        console
     })();
 
     return res.json({ message: 'EXPORTED' });
 })
+
+app.get("/report/average/download", (req, res) => {
+    var file = path.join(__dirname, `batch_${report.batch}_from_${report.from}_to_${report.to}.pdf`);
+    res.download(file, function (err) {
+        if (err) {
+            console.log("Error");
+            console.log(err);
+        } else {
+            console.log("Success");
+        }
+    });
+})
+
 
 // app.get("/report/average/pdf/move", (req, res) => {
 //     exec(moveReportCommand, (err, stdout, stderr) => {
