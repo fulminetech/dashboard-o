@@ -26,25 +26,14 @@ const time_address = 4196;
 const status_address = 2588;
 const stats_address = 8096;
 
-var temp_recepie = "DEFAULT";
-var temp_name = "DEFAULT";
-var temp_productname = "DEFAULT"
-
 // Data Structure
 var machine = {
-    operator_name: temp_name,
-    machine_id: 1,
     maincompression_upperlimit: 0,
     maincompression_lowerlimit: 0,
     precompression_upperlimit: 0,
     precompression_lowerlimit: 0,
     ejection_upperlimit: 0,
-    product: {
-        recipie_id: temp_recepie,
-        name: temp_productname,
-    },
     stats: {
-        status: "OFFLINE",
         count: 0,
         tablets_per_hour: 0,
         rpm: 0,
@@ -445,22 +434,6 @@ var readstats = function () {
             console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
 }
-
-app.get("/onboard/:namee/:machinee/:recepiee/:batchh", (req, res) => {
-    const a = req.params.namee;
-    const b = req.params.machinee;
-    const c = req.params.recepiee;
-    const d = req.params.batchh;
-
-    machine.operator_name = a;
-    machine.machine_id = b;
-    machine.product.recipie_id = c;
-    payload.batch = d;
-
-    watchproxy();
-    startmodbus()
-    return res.json({ message: `[ ONBOARDED BATCH: ${d} ]` });
-});
 
 app.use("/api/payload", (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');

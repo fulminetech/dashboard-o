@@ -16,11 +16,6 @@ const Influx = require('influxdb-nodejs');
 const { query } = require("express");
 const client = new Influx(`http://10.0.0.65:8086/new`);
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
-});
-
 const {
     payload, machine, watchproxy, startmodbus
 } = require('./data.js')
@@ -105,6 +100,30 @@ app.get("/reports", (req, res) => {
     res.sendFile(path.join(__dirname + "/html/reports.html"));
 });
 
+app.use("/api/payload", (req, res) => {
+    res.json(payload);
+});
+
+app.use("/api/machine", (req, res) => {
+    res.json(machine);
+});
+
+app.get("/onboard/:namee/:machinee/:recepiee/:batchh", (req, res) => {
+    const a = req.params.namee;
+    const b = req.params.machinee;
+    const c = req.params.recepiee;
+    const d = req.params.batchh;
+
+    machine.operator_name = a;
+    machine.machine_id = b;
+    machine.product.recipie_id = c;
+    payload.batch = d;
+
+    watchproxy();
+    startmodbus()
+    return res.json({ message: `[ ONBOARDED BATCH: ${d} ]` });
+});
+
 app.get("/api/search/rotation/:rotationn", (req, res) => {
     // select * from "payload" where "rotation" = 7
     const r = parseInt(req.params.rotationn)
@@ -179,7 +198,6 @@ app.get("/api/search/batch", (req, res) => {
 app.get("/report/template", (req, res) => {
     res.sendFile(path.join(__dirname + "/report/report.html"));
 });
-
 
 app.get("/report/average/:batch/:from/:to", (req, res) => {
     const b = req.params.batch

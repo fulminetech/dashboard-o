@@ -2,6 +2,7 @@
 const fetch = require('cross-fetch');
 const { exec } = require('child_process');
 const CronJob = require('cron').CronJob;
+
 const Gpio = require('onoff').Gpio;
 const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
 
@@ -11,14 +12,120 @@ const flux = new Influx('http://10.0.0.65:8086/new');
 // Timestamp for which returns current date and time 
 var noww = new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
 console.log(`[ STARTING DATA: ${noww} ]`)
-var startTime = + new Date();
 
 const payloadURL = 'http://10.0.0.65:3128/api/payload';
 const machineURL = 'http://10.0.0.65:3128/api/machine';
 var i = 0
 
-var payload = {}
-var machine = {}
+var temp_recepie = "DEFAULT";
+var temp_name = "DEFAULT";
+var temp_productname = "DEFAULT"
+
+var machine1 = {}
+
+var payload1 = {}
+
+// Data Structure
+var machine = {
+    operator_name: temp_name,
+    machine_id: 1,
+    maincompression_upperlimit: machine1.maincompression_upperlimit,
+    maincompression_lowerlimit: machine1.maincompression_lowerlimit,
+    precompression_upperlimit: machine1.precompression_upperlimit,
+    precompression_lowerlimit: machine1.precompression_lowerlimit,
+    ejection_upperlimit: machine1.ejection_upperlimit,
+    product: {
+        recipie_id: temp_recepie,
+        name: temp_productname,
+    },
+    stats: {
+        status: "OFFLINE",
+        count: machine1.count,
+        tablets_per_hour: machine1.tablets_per_hour,
+        rpm: machine1.rpm,
+        active_punches: machine1.active_punches,
+        mainMotor_trip: machine1.mainMotorTrip,
+        feederMotor_trip: machine1.feederMotor_trip,
+        emergencyStop_pressed: machine1.emergencyStop_pressed,
+        safetyguard_open: machine1.safetyguard_open,
+        system_overload: machine1.system_overload,
+        uptime: 0,
+    },
+    control: {
+        inching: machine1.control.inching,
+        machine_start: machine1.control.machine_start,
+        machine_stop: machine1.control.machine_stop,
+        turret_run: machine1.control.turret_run,
+        turret_rpm: machine1.control.turret_rpm,
+        forceFeeder_rpm: machine1.control.forceFeeder_rpm,
+    },
+    time: {
+        date: machine1.time.date,
+        month: machine1.time.month,
+        year: machine1.time.year,
+        hour: machine1.time.hour,
+        minute: machine1.time.minute,
+        second: machine1.time.second,
+    }
+};
+
+var payload = {
+    batch: 0,
+    data_number: 0, // Rotation Number
+    rotation_no: 0,
+    present_punch: 0,
+    punch1: {
+        precompression: payload1.punch1.precompression,
+        maincompression: payload1.punch1.maincompression,
+        ejection: payload1.punch1.ejection,
+        status: payload1.punch1.status
+    },
+    punch2: {
+        precompression: payload1.punch2.precompression,
+        maincompression: payload1.punch2.maincompression,
+        ejection: payload1.punch2.ejection,
+        status: payload1.punch2.status
+    },
+    punch3: {
+        precompression: payload1.punch3.precompression,
+        maincompression: payload1.punch3.maincompression,
+        ejection: payload1.punch3.ejection,
+        status: payload1.punch3.status
+    },
+    punch4: {
+        precompression: payload1.punch4.precompression,
+        maincompression: payload1.punch4.maincompression,
+        ejection: payload1.punch4.ejection,
+        status: payload1.punch4.status
+    },
+    punch5: {
+        precompression: payload1.punch5.precompression,
+        maincompression: payload1.punch5.maincompression,
+        ejection: payload1.punch5.ejection,
+        status: payload1.punch5.status
+    },
+    punch6: {
+        precompression: payload1.punch6.precompression,
+        maincompression: payload1.punch6.maincompression,
+        ejection: payload1.punch6.ejection,
+        status: payload1.punch6.status
+    },
+    punch7: {
+        precompression: payload1.punch7.precompression,
+        maincompression: payload1.punch7.maincompression,
+        ejection: payload1.punch7.ejection,
+        status: payload1.punch7.status
+    },
+    punch8: {
+        precompression: payload1.punch8.precompression,
+        maincompression: payload1.punch8.maincompression,
+        ejection: payload1.punch8.ejection,
+        status: payload1.punch8.status
+    },
+    precompression_avg: payload1.precompression_avg,
+    maincompression_avg: payload1.maincompression_avg,
+    ejection_avg: payload1.ejection_avg,
+};
 
 function startmodbus() {
     setInterval(() => {
@@ -36,14 +143,14 @@ async function fetchpayload() {
     if (i >= 2) {
         buffer = await res.json();
         if (buffer !== undefined) {
-            payload = buffer
+            payload1 = buffer
         } else {
             console.log(' PAYLOAD NOT RECEIVED ')
         }
 
         buffer1 = await res1.json();
         if (buffer1 !== undefined) {
-            machine = buffer1
+            machine1 = buffer1
         } else {
             console.log(' MACHINE NOT RECEIVED ')
         }
