@@ -17,7 +17,7 @@ const { query } = require("express");
 const client = new Influx(`http://10.0.0.65:8086/new`);
 
 const {
-    payload, machine, runModbus, watchproxy
+    payload, machine, watchproxy, startmodbus
 } = require('./data.js')
 
 // Serve NPM modules
@@ -100,15 +100,6 @@ app.get("/reports", (req, res) => {
     res.sendFile(path.join(__dirname + "/html/reports.html"));
 });
 
-
-app.get("/api/payload", (req, res) => {
-    res.send(payload);
-});
-
-app.get("/api/machine", (req, res) => {
-    res.send(machine);
-});
-
 app.get("/onboard/:namee/:machinee/:recepiee/:batchh", (req, res) => {
     const a = req.params.namee;
     const b = req.params.machinee;
@@ -120,9 +111,8 @@ app.get("/onboard/:namee/:machinee/:recepiee/:batchh", (req, res) => {
     machine.product.recipie_id = c;
     payload.batch = d;
 
-    runModbus();
     watchproxy();
-
+    startmodbus()
     return res.json({ message: `[ ONBOARDED BATCH: ${d} ]` });
 });
 

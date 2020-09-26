@@ -1,415 +1,57 @@
 // Include Library
-var ModbusRTU = require("modbus-serial");
-const { Stats } = require("fs");
-const { time } = require("console");
-const { config } = require("process");
-const { now } = require("moment");
-
+const fetch = require('cross-fetch');
 const { exec } = require('child_process');
 const CronJob = require('cron').CronJob;
-const Gpio = require('onoff').Gpio;
-const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
+//const Gpio = require('onoff').Gpio;
+//const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
 
 const Influx = require('influxdb-nodejs');
 const flux = new Influx('http://10.0.0.65:8086/new');
 
 // Timestamp for which returns current date and time 
 var noww = new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
-console.log(`[ STARTING: ${noww} ]`)
+console.log(`[ STARTING DATA: ${noww} ]`)
 var startTime = + new Date();
 
-// Modbus configs
-var client = new ModbusRTU();
-const timeOut = 500;
-console.log(`[ MODBUS TIMEOUT: ${timeOut} ]`);
-const slaveID = 1;
-const baudRate = 115200;
-console.log(`[ BAUDRATE: ${baudRate} ]`);
-client.setID(slaveID);
-client.setTimeout(100);
+const payloadURL = 'http://10.0.0.65:3128/api/payload';
+const machineURL = 'http://10.0.0.65:3128/api/machine';
+var i = 0
 
-// Modbus Addresses
-// 1.1. Payload
-const precompression_address = 6396;
-const maincompression_address = 6196;
-const ejection_address = 6296;
-const avg_address = 6496;
+var payload = {}
+var machine = {}
 
-const time_address = 4196;
-const status_address = 2588;
-const stats_address = 8096;
+function startmodbus() {
+    setInterval(() => {
+        fetchpayload()
+    }, 100);
+}
 
-//console.log('Modbus configured.');
-var temp_recepie = "DEFAULT";
-var temp_name = "DEFAULT";
-var temp_productname = "DEFAULT"
 
-var machine = {
-    operator_name: temp_name,
-    machine_id: 1,
-    maincompression_upperlimit: 0,
-    maincompression_lowerlimit: 0,
-    precompression_upperlimit: 0,
-    precompression_lowerlimit: 0,
-    ejection_upperlimit: 0,
-    product: {
-        recipie_id: temp_recepie,
-        name: temp_productname,
-    },
-    stats: {
-        status: "OFFLINE",
-        count: 0,
-        tablets_per_hour: 0,
-        rpm: 0,
-        active_punches: 0,
-        mainMotor_trip: false,
-        feederMotor_trip: false,
-        emergencyStop_pressed: false,
-        safetyguard_open: false,
-        system_overload: false,
-        uptime: 0,
-    },
-    control: {
-        inching: false,
-        machine_start: false,
-        machine_stop: false,
-        turret_run: false,
-        turret_rpm: 0,
-        forceFeeder_rpm: 0,
-    },
-    time: {
-        date: 0,
-        month: 0,
-        year: 0,
-        hour: 0,
-        minute: 0,
-        second: 0,
+async function fetchpayload() {
+    const res = await fetch(payloadURL);
+    const res1 = await fetch(machineURL);
+    if (res.status >= 400 || res1.status >= 400) {
+        throw new Error("Bad response from server");
     }
-};
+    i++;
+    if (i >= 2) {
+        buffer = await res.json();
+        if (buffer !== undefined) {
+            payload = buffer
+        } else {
+            console.log(' PAYLOAD NOT RECEIVED ')
+        }
 
-// High Frequency data from the PLC
-var payload = {
-    batch: 0,
-    data_number: 0, // Rotation Number
-    rotation_no: 0,
-    present_punch: 0,
-    punch1: {
-        precompression: 0,
-        maincompression: 0,
-        ejection: 0,
-        status: false
-    },
-    punch2: {
-        precompression: 0,
-        maincompression: 0,
-        ejection: 0,
-        status: false
-    },
-    punch3: {
-        precompression: 0,
-        maincompression: 0,
-        ejection: 0,
-        status: false
-    },
-    punch4: {
-        precompression: 0,
-        maincompression: 0,
-        ejection: 0,
-        status: false
-    },
-    punch5: {
-        precompression: 0,
-        maincompression: 0,
-        ejection: 0,
-        status: false
-    },
-    punch6: {
-        precompression: 0,
-        maincompression: 0,
-        ejection: 0,
-        status: false
-    },
-    punch7: {
-        precompression: 0,
-        maincompression: 0,
-        ejection: 0,
-        status: false
-    },
-    punch8: {
-        precompression: 0,
-        maincompression: 0,
-        ejection: 0,
-        status: false
-    },
-    precompression_avg: 0,
-    maincompression_avg: 0,
-    ejection_avg: 0,
-};
-
-// Modbus 'state' constants
-var MBS_STATE_INIT = "State init";
-
-var MBS_STATE_GOOD_READ_TIME = "State good time (read)";
-var MBS_STATE_GOOD_READ_PRE = "State good pre (read)";
-var MBS_STATE_GOOD_READ_MAIN = "State good main (read)";
-var MBS_STATE_GOOD_READ_EJN = "State good ejn (read)";
-var MBS_STATE_GOOD_READ_AVG = "State good avg (read)";
-var MBS_STATE_GOOD_READ_STATUS = "State good status (read)";
-var MBS_STATE_GOOD_READ_STATS = "State good stats (read)";
-
-var MBS_STATE_FAIL_READ_TIME = "State fail time (read)";
-var MBS_STATE_FAIL_READ_PRE = "State fail pre (read)";
-var MBS_STATE_FAIL_READ_MAIN = "State fail main (read)";
-var MBS_STATE_FAIL_READ_EJN = "State fail ejn (read)";
-var MBS_STATE_FAIL_READ_AVG = "State fail avg (read)";
-var MBS_STATE_FAIL_READ_STATUS = "State fail status (read)";
-var MBS_STATE_FAIL_READ_STATS = "State fail stats (read)";
-
-var MBS_STATE_GOOD_CONNECT = "State good (port)";
-var MBS_STATE_FAIL_CONNECT = "State fail (port)";
-
-var mbsState = MBS_STATE_INIT;
-var mbsScan = 65;
-
-//  Make physical connection
-var connectClient = function () {
-    client.connectRTUBuffered("/dev/ttyUSB0", { baudRate: baudRate, parity: 'none' })
-        .then(function () {
-            mbsState = MBS_STATE_GOOD_CONNECT;
-            console.log(`[ CONNECTED ]`)
-        })
-        .catch(function (e) {
-            mbsState = MBS_STATE_FAIL_CONNECT;
-            console.log(`[ FAILED TO CONNECT ]`)
-            console.log(e);
-        });
-}
-
-// Sync Time from PLC
-var syncplctime = function () {
-    client.readHoldingRegisters(time_address, 6)
-        .then(function (plcTime) {
-            exec(`sudo timedatectl set-time '20${plcTime.data[2]}-${plcTime.data[1]}-${plcTime.data[0]} ${plcTime.data[3]}:${plcTime.data[4]}:${plcTime.data[5]}'`, (err, stdout, stderr) => {
-                console.log(`[ Time updated! ]`)
-            })
-        })
-        .then(function () {
-            mbsState = MBS_STATE_GOOD_READ_TIME;
-        })
-        .catch(function (e) {
-            mbsState = MBS_STATE_FAIL_READ_TIME;
-            console.log('#6 Time Garbage')
-        })
-}
-
-// Run MODBUS
-var runModbus = function () {
-    var nextAction;
-    switch (mbsState) {
-        case MBS_STATE_INIT:
-            nextAction = connectClient;
-            break;
-
-        case MBS_STATE_GOOD_CONNECT:
-            nextAction = syncplctime;
-            break;
-
-        case MBS_STATE_GOOD_READ_TIME || MBS_STATE_FAIL_READ_TIME:
-            nextAction = readpre;
-            break;
-
-        case MBS_STATE_GOOD_READ_PRE:
-            nextAction = readmain;
-            break;
-
-        case MBS_STATE_FAIL_READ_PRE:
-            nextAction = readmain;
-            break;
-
-        case MBS_STATE_GOOD_READ_MAIN:
-            nextAction = readejn;
-            break;
-
-        case MBS_STATE_FAIL_READ_MAIN:
-            nextAction = readejn;
-            break;
-
-        case MBS_STATE_GOOD_READ_EJN:
-            nextAction = readavg;
-            break;
-
-        case MBS_STATE_FAIL_READ_EJN:
-            nextAction = readavg;
-            break;
-
-        case MBS_STATE_GOOD_READ_AVG:
-            nextAction = readstatus;
-            break;
-
-        case MBS_STATE_FAIL_READ_AVG:
-            nextAction = readstatus;
-            break;
-
-        case MBS_STATE_GOOD_READ_STATUS:
-            nextAction = readpre;
-            break;
-
-        case MBS_STATE_FAIL_READ_STATUS:
-            nextAction = readpre;
-            break;
-
-        default:
-        // nothing to do, keep scanning until actionable case
+        buffer1 = await res1.json();
+        if (buffer1 !== undefined) {
+            machine = buffer1
+        } else {
+            console.log(' MACHINE NOT RECEIVED ')
+        }
     }
-
-    //console.log();
-    //console.log(nextAction);
-
-    machine.stats.status = "ONLINE";
-
-    // execute "next action" function if defined
-    if (nextAction !== undefined) {
-        nextAction();
-    } else {
-        readpre();
-    }
-
-    // set for next run
-    setTimeout(runModbus, mbsScan);
-}
-
-var readpre = function () {
-    client.readHoldingRegisters(precompression_address, 8)
-        .then(function (precompression) {
-            payload.punch1.precompression = precompression.data[0] / 100;
-            payload.punch2.precompression = precompression.data[1] / 100;
-            payload.punch3.precompression = precompression.data[2] / 100;
-            payload.punch4.precompression = precompression.data[3] / 100;
-            payload.punch5.precompression = precompression.data[4] / 100;
-            payload.punch6.precompression = precompression.data[5] / 100;
-            payload.punch7.precompression = precompression.data[6] / 100;
-            payload.punch8.precompression = precompression.data[7] / 100;
-
-            mbsState = MBS_STATE_GOOD_READ_PRE;
-            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-        .catch(function (e) {
-            console.log('#1 Precompression Garbage')
-            mbsState = MBS_STATE_FAIL_READ_PRE;
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-}
-
-var readmain = function () {
-    client.readHoldingRegisters(maincompression_address, 8)
-        .then(function (maincompression) {
-            payload.punch1.maincompression = maincompression.data[0] / 100;
-            payload.punch2.maincompression = maincompression.data[1] / 100;
-            payload.punch3.maincompression = maincompression.data[2] / 100;
-            payload.punch4.maincompression = maincompression.data[3] / 100;
-            payload.punch5.maincompression = maincompression.data[4] / 100;
-            payload.punch6.maincompression = maincompression.data[5] / 100;
-            payload.punch7.maincompression = maincompression.data[6] / 100;
-            payload.punch8.maincompression = maincompression.data[7] / 100;
-
-            mbsState = MBS_STATE_GOOD_READ_MAIN;
-            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-        .catch(function (e) {
-            console.log('#2 Maincompression Garbage')
-            mbsState = MBS_STATE_FAIL_READ_MAIN;
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-}
-
-var readejn = function () {
-    client.readHoldingRegisters(ejection_address, 8)
-        .then(function (ejection) {
-            payload.punch1.ejection = ejection.data[0] / 1000;
-            payload.punch2.ejection = ejection.data[1] / 1000;
-            payload.punch3.ejection = ejection.data[2] / 1000;
-            payload.punch4.ejection = ejection.data[3] / 1000;
-            payload.punch5.ejection = ejection.data[4] / 1000;
-            payload.punch6.ejection = ejection.data[5] / 1000;
-            payload.punch7.ejection = ejection.data[6] / 1000;
-            payload.punch8.ejection = ejection.data[7] / 1000;
-
-            mbsState = MBS_STATE_GOOD_READ_EJN;
-            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-        .catch(function (e) {
-            console.log('#3 Ejection Garbage')
-            mbsState = MBS_STATE_FAIL_READ_EJN;
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-}
-
-var readavg = function () {
-    client.readHoldingRegisters(avg_address, 3)
-        .then(function (avg) {
-            payload.maincompression_avg = avg.data[0] / 100;
-            payload.precompression_avg = avg.data[1] / 100;
-            payload.ejection_avg = avg.data[2] / 100;
-
-            mbsState = MBS_STATE_GOOD_READ_AVG;
-            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-        .catch(function (e) {
-            console.log('#4 Avg Garbage')
-            mbsState = MBS_STATE_FAIL_READ_AVG;
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-}
-
-var readstatus = function () {
-    client.readCoils(status_address, 8)
-        .then(function (punch_status) {
-            payload.punch1.status = punch_status.data[0];
-            payload.punch2.status = punch_status.data[1];
-            payload.punch3.status = punch_status.data[2];
-            payload.punch4.status = punch_status.data[3];
-            payload.punch5.status = punch_status.data[4];
-            payload.punch6.status = punch_status.data[5];
-            payload.punch7.status = punch_status.data[6];
-            payload.punch8.status = punch_status.data[7];
-
-            mbsState = MBS_STATE_GOOD_READ_STATUS;
-            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-        .catch(function (e) {
-            console.log('#6 Status Garbage')
-            mbsState = MBS_STATE_FAIL_READ_STATUS;
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-}
-
-var readstats = function () {
-    client.readHoldingRegisters(stats_address, 11)
-        .then(function (stats_data) {
-            // machine.stats.active_punches = stats_data.data[0];
-            // payload.data_number = stats_data.data[1];
-            // payload.present_punch = stats_data.data[2];
-            // machine.stats.count = stats_data.data[3];
-            // machine.stats.tablets_per_hour = stats_data.data[4];
-            // machine.control.turret_rpm = stats.data[5];
-            // machine.maincompression_upperlimit = stats_data.data[6];
-            // machine.maincompression_lowerlimit = stats_data.data[7];
-            // machine.precompression_upperlimit = stats_data.data[8];
-            // machine.precompression_lowerlimit = stats_data.data[9];
-            // machine.ejection_upperlimit = stats_data.data[10];
-
-            mbsState = MBS_STATE_GOOD_READ_STATS;
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
-        .catch(function (e) {
-            console.log('#7 Stats Garbage')
-            mbsState = MBS_STATE_FAIL_READ_STATS;
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
-        })
 }
 
 // --+++=== DATABASE WRITE ===+++-- //
-
 // Initialise Rotation 
 var rotation = -1;
 
@@ -585,11 +227,6 @@ var watchproxy = function () {
     });
 }
 
-// process.on('SIGINT', _ => {
-//     Gpio.unexport();
-//     console.log(`[ Exiting ${noww} ]`);
-// });
-
 module.exports = {
-    machine, payload, runModbus, watchproxy
+    machine, payload, watchproxy, startmodbus
 }
