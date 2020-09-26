@@ -120,7 +120,7 @@ app.get("/onboard/:namee/:machinee/:recepiee/:batchh", (req, res) => {
     payload.batch = d;
 
     watchproxy();
-    startmodbus()
+    startmodbus();
     return res.json({ message: `[ ONBOARDED BATCH: ${d} ]` });
 });
 
@@ -239,7 +239,6 @@ app.get("/report/average/download", (req, res) => {
         }
     });
 })
-
 
 // app.get("/report/average/pdf/move", (req, res) => {
 //     exec(moveReportCommand, (err, stdout, stderr) => {

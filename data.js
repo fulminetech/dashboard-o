@@ -21,51 +21,47 @@ var temp_recepie = "DEFAULT";
 var temp_name = "DEFAULT";
 var temp_productname = "DEFAULT"
 
-var machine1 = {}
-
-var payload1 = {}
-
 // Data Structure
 var machine = {
     operator_name: temp_name,
     machine_id: 1,
-    maincompression_upperlimit: machine1.maincompression_upperlimit,
-    maincompression_lowerlimit: machine1.maincompression_lowerlimit,
-    precompression_upperlimit: machine1.precompression_upperlimit,
-    precompression_lowerlimit: machine1.precompression_lowerlimit,
-    ejection_upperlimit: machine1.ejection_upperlimit,
+    maincompression_upperlimit: 0,
+    maincompression_lowerlimit: 0,
+    precompression_upperlimit: 0,
+    precompression_lowerlimit: 0,
+    ejection_upperlimit: 0,
     product: {
         recipie_id: temp_recepie,
         name: temp_productname,
     },
     stats: {
         status: "OFFLINE",
-        count: machine1.count,
-        tablets_per_hour: machine1.tablets_per_hour,
-        rpm: machine1.rpm,
-        active_punches: machine1.active_punches,
-        mainMotor_trip: machine1.mainMotorTrip,
-        feederMotor_trip: machine1.feederMotor_trip,
-        emergencyStop_pressed: machine1.emergencyStop_pressed,
-        safetyguard_open: machine1.safetyguard_open,
-        system_overload: machine1.system_overload,
+        count: 0,
+        tablets_per_hour: 0,
+        rpm: 0,
+        active_punches: 0,
+        mainMotor_trip: false,
+        feederMotor_trip: false,
+        emergencyStop_pressed: false,
+        safetyguard_open: false,
+        system_overload: false,
         uptime: 0,
     },
     control: {
-        inching: machine1.control.inching,
-        machine_start: machine1.control.machine_start,
-        machine_stop: machine1.control.machine_stop,
-        turret_run: machine1.control.turret_run,
-        turret_rpm: machine1.control.turret_rpm,
-        forceFeeder_rpm: machine1.control.forceFeeder_rpm,
+        inching: false,
+        machine_start: false,
+        machine_stop: false,
+        turret_run: false,
+        turret_rpm: 0,
+        forceFeeder_rpm: 0,
     },
     time: {
-        date: machine1.time.date,
-        month: machine1.time.month,
-        year: machine1.time.year,
-        hour: machine1.time.hour,
-        minute: machine1.time.minute,
-        second: machine1.time.second,
+        date: 0,
+        month: 0,
+        year: 0,
+        hour: 0,
+        minute: 0,
+        second: 0,
     }
 };
 
@@ -75,56 +71,56 @@ var payload = {
     rotation_no: 0,
     present_punch: 0,
     punch1: {
-        precompression: payload1.punch1.precompression,
-        maincompression: payload1.punch1.maincompression,
-        ejection: payload1.punch1.ejection,
-        status: payload1.punch1.status
+        precompression: 0,
+        maincompression: 0,
+        ejection: 0,
+        status: false
     },
     punch2: {
-        precompression: payload1.punch2.precompression,
-        maincompression: payload1.punch2.maincompression,
-        ejection: payload1.punch2.ejection,
-        status: payload1.punch2.status
+        precompression: 0,
+        maincompression: 0,
+        ejection: 0,
+        status: false
     },
     punch3: {
-        precompression: payload1.punch3.precompression,
-        maincompression: payload1.punch3.maincompression,
-        ejection: payload1.punch3.ejection,
-        status: payload1.punch3.status
+        precompression: 0,
+        maincompression: 0,
+        ejection: 0,
+        status: false
     },
     punch4: {
-        precompression: payload1.punch4.precompression,
-        maincompression: payload1.punch4.maincompression,
-        ejection: payload1.punch4.ejection,
-        status: payload1.punch4.status
+        precompression: 0,
+        maincompression: 0,
+        ejection: 0,
+        status: false
     },
     punch5: {
-        precompression: payload1.punch5.precompression,
-        maincompression: payload1.punch5.maincompression,
-        ejection: payload1.punch5.ejection,
-        status: payload1.punch5.status
+        precompression: 0,
+        maincompression: 0,
+        ejection: 0,
+        status: false
     },
     punch6: {
-        precompression: payload1.punch6.precompression,
-        maincompression: payload1.punch6.maincompression,
-        ejection: payload1.punch6.ejection,
-        status: payload1.punch6.status
+        precompression: 0,
+        maincompression: 0,
+        ejection: 0,
+        status: false
     },
     punch7: {
-        precompression: payload1.punch7.precompression,
-        maincompression: payload1.punch7.maincompression,
-        ejection: payload1.punch7.ejection,
-        status: payload1.punch7.status
+        precompression: 0,
+        maincompression: 0,
+        ejection: 0,
+        status: false
     },
     punch8: {
-        precompression: payload1.punch8.precompression,
-        maincompression: payload1.punch8.maincompression,
-        ejection: payload1.punch8.ejection,
-        status: payload1.punch8.status
+        precompression: 0,
+        maincompression: 0,
+        ejection: 0,
+        status: false
     },
-    precompression_avg: payload1.precompression_avg,
-    maincompression_avg: payload1.maincompression_avg,
-    ejection_avg: payload1.ejection_avg,
+    precompression_avg: 0,
+    maincompression_avg: 0,
+    ejection_avg: 0,
 };
 
 function startmodbus() {
@@ -143,19 +139,96 @@ async function fetchpayload() {
     if (i >= 2) {
         buffer = await res.json();
         if (buffer !== undefined) {
-            payload1 = buffer
-        } else {
-            console.log(' PAYLOAD NOT RECEIVED ')
-        }
+            payload1 = buffer;
 
-        buffer1 = await res1.json();
-        if (buffer1 !== undefined) {
-            machine1 = buffer1
-        } else {
-            console.log(' MACHINE NOT RECEIVED ')
-        }
+
+            payload.punch1.precompression = payload1.punch1.precompression;
+            payload.punch1.maincompression = payload1.punch1.maincompression;
+            payload.punch1.ejection = payload1.punch1.ejection;
+            payload.punch1.status = payload1.punch1.status;
+
+            payload.punch2.precompression = payload1.punch2.precompression;
+            payload.punch2.maincompression = payload1.punch2.maincompression;
+            payload.punch2.ejection = payload1.punch2.ejection;
+            payload.punch2.status = payload1.punch2.status;
+
+            payload.punch3.precompression = payload1.punch3.precompression;
+            payload.punch3.maincompression = payload1.punch3.maincompression;
+            payload.punch3.ejection = payload1.punch3.ejection;
+            payload.punch3.status = payload1.punch3.status;
+
+            payload.punch4.precompression = payload1.punch4.precompression;
+            payload.punch4.maincompression = payload1.punch4.maincompression;
+            payload.punch4.ejection = payload1.punch4.ejection;
+            payload.punch4.status = payload1.punch4.status;
+
+            payload.punch5.precompression = payload1.punch5.precompression;
+            payload.punch5.maincompression = payload1.punch5.maincompression;
+            payload.punch5.ejection = payload1.punch5.ejection;
+            payload.punch5.status = payload1.punch5.status;
+
+            payload.punch6.precompression = payload1.punch6.precompression;
+            payload.punch6.maincompression = payload1.punch6.maincompression;
+            payload.punch6.ejection = payload1.punch6.ejection;
+            payload.punch6.status = payload1.punch6.status
+
+            payload.punch7.precompression = payload1.punch7.precompression;
+            payload.punch7.maincompression = payload1.punch7.maincompression;
+            payload.punch7.ejection = payload1.punch7.ejection;
+            payload.punch7.status = payload1.punch7.status;
+
+            payload.punch8.precompression = payload1.punch8.precompression;
+            payload.punch8.maincompression = payload1.punch8.maincompression;
+            payload.punch8.ejection = payload1.punch8.ejection;
+            payload.punch8.status = payload1.punch8.status;
+
+            payload.precompression_avg = payload1.precompression_avg;
+            payload.maincompression_avg = payload1.maincompression_avg;
+            payload.ejection_avg = payload1.ejection_avg;
+        };
+
+    } else {
+        console.log(' PAYLOAD NOT RECEIVED ')
     }
-}
+
+    buffer1 = await res1.json();
+    if (buffer1 !== undefined) {
+        machine1 = buffer1;
+
+        machine.maincompression_upperlimit = machine1.maincompression_upperlimit;
+        machine.maincompression_lowerlimit = machine1.maincompression_lowerlimit;
+        machine.precompression_upperlimit = machine1.precompression_upperlimit;
+        machine.precompression_lowerlimit = machine1.precompression_lowerlimit;
+        machine.ejection_upperlimit = machine1.ejection_upperlimit;
+
+        //machine.stats.count = machine1.count;
+        //machine.stats.tablets_per_hour = machine1.tablets_per_hour;
+        //machine.stats.rpm = machine1.rpm;
+        //machine.stats.active_punches = machine1.active_punches;
+        //machine.stats.mainMotor_trip = machine1.mainMotorTrip;
+        //machine.stats.feederMotor_trip = machine1.feederMotor_trip;
+        //machine.stats.emergencyStop_pressed = machine1.emergencyStop_pressed;
+        //machine.stats.safetyguard_open = machine1.safetyguard_open;
+        //machine.stats.system_overload = machine1.system_overload;
+
+        // machine.control.inching = machine1.control.inching;
+        // machine.control.machine_start = machine1.control.machine_start;
+        // machine.control.machine_stop = machine1.control.machine_stop;
+        // machine.control.turret_run = machine1.control.turret_run;
+        // machine.control.turret_rpm = machine1.control.turret_rpm;
+        // machine.control.forceFeeder_rpm = machine1.control.forceFeeder_rpm;
+
+        machine.time.date = machine1.time.date;
+        machine.time.month = machine1.time.month;
+        machine.time.year = machine1.time.year;
+        machine.time.hou = machine1.time.hour;
+        machine.time.minute = machine1.time.minute;
+        machine.time.second = machine1.time.second;
+
+    } else {
+        console.log(' MACHINE NOT RECEIVED ')
+    }
+};
 
 // --+++=== DATABASE WRITE ===+++-- //
 // Initialise Rotation 
