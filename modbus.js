@@ -446,12 +446,30 @@ var readstats = function () {
         })
 }
 
-app.get("/api/payload", (req, res) => {
-    res.send(payload);
+app.get("/onboard/:namee/:machinee/:recepiee/:batchh", (req, res) => {
+    const a = req.params.namee;
+    const b = req.params.machinee;
+    const c = req.params.recepiee;
+    const d = req.params.batchh;
+
+    machine.operator_name = a;
+    machine.machine_id = b;
+    machine.product.recipie_id = c;
+    payload.batch = d;
+
+    watchproxy();
+    startmodbus()
+    return res.json({ message: `[ ONBOARDED BATCH: ${d} ]` });
 });
 
-app.get("/api/machine", (req, res) => {
-    res.send(machine);
+app.use("/api/payload", (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.json(payload);
+});
+
+app.use("/api/machine", (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.json(machine);
 });
 
 // Start Server

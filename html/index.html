@@ -1461,7 +1461,7 @@
     <!-- PAYLOAD API fetch -->
     <script>
         async function fetchpayloadapiHF() {
-            const payloadResponse = await fetch(payloadURL);
+            const payloadResponse = await fetch(payloadURL, { mode: 'cors' });
             const payload = await payloadResponse.json();
             console.log(payload);
 
@@ -1859,7 +1859,6 @@
             ejngraph.update();
         };
 
-
         setInterval(() => {
             fetchpayloadapiHF();
         }, 223);
@@ -1869,7 +1868,7 @@
     <script>
         // Used for machine related metric cards
         async function fetchmachineapi() {
-            const machineResponse = await fetch(machineURL);
+            const machineResponse = await fetch(machineURL, { mode: 'cors' });
             const machine = await machineResponse.json();
             console.log(machine);
 

@@ -8,13 +8,6 @@
     <title>Reports</title>
     <meta name="description" content="8-Puch Tablet Press Dashboard">
 
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-
-
     <!-- NPM package includes -->
     <link href="/font/css/all.css" rel="stylesheet">
     <script src="/charts/Chart.bundle.min.js"></script>
@@ -233,7 +226,7 @@
 
                                             <!-- Search Button -->
                                             <div class="pr-3">
-                                                <button
+                                                <button id="searchbatch"
                                                     class="bg-blue-100 uppercase text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"
                                                     onclick="searchBatch()">
                                                     SEARCH
@@ -272,9 +265,9 @@
                                                     type="number" placeholder="TO">
                                             </form>
 
-                                            <!-- Search Button -->
+                                            <!-- PDF report Button -->
                                             <div class="px-2">
-                                                <button
+                                                <button id="generatepdfreport"
                                                     class="bg-blue-100 uppercase text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"
                                                     onclick="generateReport()">
                                                     PDF report
@@ -331,47 +324,7 @@
 
                             </div>
                         </div>
-                        <label for="carousel-2"
-                            class="next control-1 w-10 h-10 mb-5 md:mr-5 absolute cursor-pointer hidden text-3xl font-bold opacity-25 text-black rounded-full bg-white hover:opacity-100 leading-tight text-center z-10 inset-y-0 right-0 my-auto">›</label>
                     </div>
-
-                    <!-- Realtime Slide - 2 -->
-                    <div class="carousel-inner relative overflow-hidden w-full">
-                        <!--Main slide-->
-                        <input class="carousel-open" type="radio" id="carousel-2" name="carousel" aria-hidden="true"
-                            hidden="">
-                        <div class="carousel-item absolute opacity-0 border overflow-y-auto border-gray-800 rounded shadow"
-                            style="height:90vh;">
-                            <div class="flex flex-wrap w-full text-center">
-
-                                <!-- Reports Banner -->
-                                <div class="w-full p-3">
-                                    <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
-                                        <div class="flex flex-row items-center">
-                                            <div class="flex-shrink px-4">
-                                                <div class="rounded p-3 bg-indigo-600"><i
-                                                        class="fab fa-connectdevelop fa-pulse fa-2x fa-fw fa-inverse"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-1 text-right md:text-center">
-                                                <h3 class="font-bold uppercase text-3xl p-3 text-gray-400">
-                                                    Average Table
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-                        <label for="carousel-1"
-                            class="prev control-2 w-10 h-10 mb-5 md:ml-5 absolute cursor-pointer hidden text-3xl font-bold opacity-25 text-black rounded-full bg-white hover:opacity-100 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
-
-                    </div>
-
-
                 </div>
             </div>
         </div>
@@ -436,7 +389,10 @@
             }
         });
 
+        var element2 = document.getElementById("searchbatch");
+
         async function searchBatch() {
+
             var a = document.getElementById("batchname");
             var name = "";
             var i;
@@ -444,36 +400,53 @@
                 name += a.elements[i].value;
             }
 
-            var queryAvgURL = `${searchAvgURL}${name}`
+            if (name == "") {
 
-            const avgData = await fetch(queryAvgURL);
-            const avggbatch = await avgData.json();
+            } else {
 
-            document.getElementById("totalrotations").innerHTML = avggbatch.totalrotations;
+                document.getElementById("searchbatch").innerText = "PLEASE WAIT";
+                element2.classList.add("cursor-not-allowed");
 
-            let avglistt = avggbatch.data;
+                var queryAvgURL = `${searchAvgURL}${name}`
 
-            function loadavglist() {
-                const avgListBody = document.getElementById('avgtable');
-                let avgHTML = '';
+                const avgData = await fetch(queryAvgURL);
+                const avggbatch = await avgData.json();
 
-                let i = -1;
-                for (let avgg of avglistt) {
-                    i++;
-                    let avgdataa = avggbatch.data[i]
-                    avgHTML += `<tr><td class="border border-gray-700 px-4 py-2">${avgdataa[1]}</td><td id="p1-pre" class="border border-gray-700 px-4 py-2">${avgdataa[2]}</td><td class="border border-gray-700 px-4 py-2">${avgdataa[3]}</td><td id="p1-ejn" class="border border-gray-700 px-4 py-2">${avgdataa[4]}</td></tr>`
+                document.getElementById("totalrotations").innerHTML = avggbatch.totalrotations;
+
+                let avglistt = avggbatch.data;
+
+                function loadavglist() {
+                    const avgListBody = document.getElementById('avgtable');
+                    let avgHTML = '';
+
+                    let i = -1;
+                    for (let avgg of avglistt) {
+                        i++;
+                        let avgdataa = avggbatch.data[i]
+                        avgHTML += `<tr><td class="border border-gray-700 px-4 py-2">${avgdataa[1]}</td><td id="p1-pre" class="border border-gray-700 px-4 py-2">${avgdataa[2]}</td><td class="border border-gray-700 px-4 py-2">${avgdataa[3]}</td><td id="p1-ejn" class="border border-gray-700 px-4 py-2">${avgdataa[4]}</td></tr>`
+                    }
+
+                    avgListBody.innerHTML = avgHTML;
                 }
 
-                avgListBody.innerHTML = avgHTML;
-            }
+                loadavglist();
 
-            loadavglist();
+                document.getElementById("searchbatch").innerText = "SEARCH";
+                element2.classList.remove("cursor-not-allowed");
+
+            }
         }
     </script>
 
     <!-- Generate PDF Report -->
     <script>
+        var element = document.getElementById("generatepdfreport");
+
+        var pdfgenerationtime = 20000;
+
         async function generateReport() {
+
             var a = document.getElementById("fromRotationNumber");
             var fromname = "";
             var i;
@@ -495,16 +468,25 @@
                 bname += c.elements[k].value;
             }
 
-            const reportAvgURL = `${host}/report/average`
-            var queryAvgURL = `${reportAvgURL}/${bname}/${fromname}/${toname}`
-            await fetch(queryAvgURL);
+            if (fromname == "" || toname == "" || bname == "" || parseInt(fromname) > parseInt(toname)) {
+                window.alert("Enter valid Batch Name, Start and Stop Rotation Number  ");
+            } else {
+                document.getElementById("generatepdfreport").innerText = "PLEASE WAIT";
+                element.classList.add("cursor-not-allowed");
 
-            const reportAvgGenURL = `${host}/report/average/generate`
-            await fetch(reportAvgGenURL);
+                const reportAvgURL = `${host}/report/average`
+                var queryAvgURL = `${reportAvgURL}/${bname}/${fromname}/${toname}`
+                await fetch(queryAvgURL);
 
-            setTimeout(() => {
-                location.href = "/report/average/download"
-            }, 10000);
+                const reportAvgGenURL = `${host}/report/average/generate`
+                await fetch(reportAvgGenURL);
+
+                setTimeout(() => {
+                    location.href = "/report/average/download"
+                    document.getElementById("generatepdfreport").innerText = "PDF REPORT";
+                    element.classList.remove("cursor-not-allowed");
+                }, pdfgenerationtime);
+            }
         }
     </script>
 

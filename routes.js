@@ -16,6 +16,11 @@ const Influx = require('influxdb-nodejs');
 const { query } = require("express");
 const client = new Influx(`http://10.0.0.65:8086/new`);
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
+
 const {
     payload, machine, watchproxy, startmodbus
 } = require('./data.js')
@@ -98,22 +103,6 @@ app.get("/control", (req, res) => {
 
 app.get("/reports", (req, res) => {
     res.sendFile(path.join(__dirname + "/html/reports.html"));
-});
-
-app.get("/onboard/:namee/:machinee/:recepiee/:batchh", (req, res) => {
-    const a = req.params.namee;
-    const b = req.params.machinee;
-    const c = req.params.recepiee;
-    const d = req.params.batchh;
-
-    machine.operator_name = a;
-    machine.machine_id = b;
-    machine.product.recipie_id = c;
-    payload.batch = d;
-
-    watchproxy();
-    startmodbus()
-    return res.json({ message: `[ ONBOARDED BATCH: ${d} ]` });
 });
 
 app.get("/api/search/rotation/:rotationn", (req, res) => {

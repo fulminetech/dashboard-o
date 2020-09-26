@@ -2,8 +2,8 @@
 const fetch = require('cross-fetch');
 const { exec } = require('child_process');
 const CronJob = require('cron').CronJob;
-//const Gpio = require('onoff').Gpio;
-//const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
+const Gpio = require('onoff').Gpio;
+const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
 
 const Influx = require('influxdb-nodejs');
 const flux = new Influx('http://10.0.0.65:8086/new');
@@ -25,7 +25,6 @@ function startmodbus() {
         fetchpayload()
     }, 100);
 }
-
 
 async function fetchpayload() {
     const res = await fetch(payloadURL);
