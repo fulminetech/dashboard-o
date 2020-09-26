@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "echo [ NO DEV CONFIG ] ",
-    "live": "npm install && pm2 start routes.js && pm2 save && pm2 startup",
+    "live": "npm install && pm2 start routes.js --name prod-routes && pm2 start modbus.js --name prod-modbus",
     "build:css": "tailwind build src/style.css -o html/style.css"
   },
   "keywords": [],
