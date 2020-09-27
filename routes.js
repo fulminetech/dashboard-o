@@ -8,8 +8,9 @@ const CronJob = require('cron').CronJob;
 const { exec } = require('child_process');
 const puppeteer = require('puppeteer');
 
-const restartCommand = "pm2 restart 0"
-const restart1Command = "pm2 restart 1"
+const restartCommand = "pm2 restart prod-routes"
+const restart1Command = "pm2 restart prod-modbus"
+
 const rebootCommand = "sudo reboot -h now"
 
 // Influx Imports
@@ -257,13 +258,13 @@ app.get("/restart/:what", (req, res) => {
     if (a == "pm2-0") {
         exec(restartCommand, (err, stdout, stderr) => {
             // handle err if you like!
-            console.log(`[ RESTARTING: PM2-0 ]`);
+            console.log(`[ RESTARTING: prod-routes ]`);
             console.log(`${stdout}`);
         });
     } else if (a == "pm2-1") {
         exec(restart1Command, (err, stdout, stderr) => {
             // handle err if you like!
-            console.log(`[ RESTARTING: PM2-1 ]`);
+            console.log(`[ RESTARTING: prod-modbus ]`);
             console.log(`${stdout}`);
         });
     }
