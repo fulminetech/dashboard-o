@@ -5,7 +5,7 @@ const fetch = require('cross-fetch');
 
 const app = express();
 
-const pm21restartURL = 'http://10.0.0.65:3000/restart/pm2-1';
+const pm21restartURL = "http://10.0.0.65:3000/restart/pm2-1"
 
 // Timestamp for which returns current date and time 
 var noww = new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });

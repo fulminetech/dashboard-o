@@ -260,8 +260,7 @@ app.get("/restart/:what", (req, res) => {
             console.log(`[ RESTARTING: PM2-0 ]`);
             console.log(`${stdout}`);
         });
-    }
-    if (a == "pm2-1") {
+    } else if (a == "pm2-1") {
         exec(restart1Command, (err, stdout, stderr) => {
             // handle err if you like!
             console.log(`[ RESTARTING: PM2-1 ]`);
