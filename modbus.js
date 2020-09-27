@@ -1,7 +1,7 @@
 var ModbusRTU = require("modbus-serial");
 const express = require("express");
 const { exec } = require('child_process');
-const restartCommand = "pm2 restart 0";
+const restartCommand = "pm2 restart prod-modbus";
 
 const app = express();
 
@@ -148,10 +148,11 @@ var MBS_STATE_FAIL_CONNECT = "State fail (port)";
 var mbsState = MBS_STATE_INIT;
 
 var mbsTimeout = 1000;
-var mbsScan = 53;
+var mbsScan = 75;
 
-let failedPreRead = 0;
+let readfailed = 0;
 let failcounter = 5;
+
 let timecheck = 3;
 let timetemp = 0;
 
@@ -179,8 +180,6 @@ var connectClient = function () {
 }
 
 connectClient()
-
-
 
 // Sync Time from PLC
 var syncplctime = function () {
@@ -247,12 +246,18 @@ var runModbus = function () {
 
         default:
         // nothing to do, keep scanning until actionable case
+            
     }
 
     //console.log();
-    console.log(nextAction);
+    // console.log(nextAction);
 
     machine.stats.status = "ONLINE";
+    
+    if (readfailed > failcounter) {
+        // readfailed = 0;
+        restartprodmodbus();
+    }
 
     // execute "next action" function if defined
     if (nextAction !== undefined) {
@@ -281,17 +286,10 @@ var readpre = function () {
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
         .catch(function (e) {
-            console.log('#1 Precompression Garbage')
+            console.error('[ #1 Precompression Garbage ]')
             mbsState = MBS_STATE_FAIL_READ_PRE;
-
-            failedPreRead++;
-            if (failedPreRead > failcounter) {
-                console.log("FAILED: " + failedPreRead)
-                failedPreRead = 0;
-                restartprodmodbus();
-            }
-
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
+            readfailed++;
+            //console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
 }
 
@@ -311,16 +309,10 @@ var readmain = function () {
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
         .catch(function (e) {
-            console.log('#2 Maincompression Garbage')
+            console.error('[ #2 Maincompression Garbage ]')
             mbsState = MBS_STATE_FAIL_READ_MAIN;
-
-            failedPreRead++;
-            if (failedPreRead > failcounter) {
-                console.log("FAILED: " + failedPreRead)
-                failedPreRead = 0;
-                restartprodmodbus();
-            }
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
+            readfailed++;
+            //console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
 }
 
@@ -340,16 +332,10 @@ var readejn = function () {
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
         .catch(function (e) {
-            console.log('#3 Ejection Garbage')
+            console.error('[ #3 Ejection Garbage ]')
             mbsState = MBS_STATE_FAIL_READ_EJN;
-
-            failedPreRead++;
-            if (failedPreRead > failcounter) {
-                console.log("FAILED: " + failedPreRead)
-                failedPreRead = 0;
-                restartprodmodbus();
-            }
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
+            readfailed++;
+            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
 }
 
@@ -364,16 +350,10 @@ var readavg = function () {
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
         .catch(function (e) {
-            console.log('#4 Avg Garbage')
+            console.error('[ #4 Avg Garbage ]')
             mbsState = MBS_STATE_FAIL_READ_AVG;
-
-            failedPreRead++;
-            if (failedPreRead > failcounter) {
-                console.log("FAILED: " + failedPreRead)
-                failedPreRead = 0;
-                restartprodmodbus();
-            }
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
+            readfailed++;
+            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
 }
 
@@ -393,16 +373,10 @@ var readstatus = function () {
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
         .catch(function (e) {
-            console.log('#6 Status Garbage')
+            console.error('[ #6 Status Garbage ]')
             mbsState = MBS_STATE_FAIL_READ_STATUS;
-
-            failedPreRead++;
-            if (failedPreRead > failcounter) {
-                console.log("FAILED: " + failedPreRead)
-                failedPreRead = 0;
-                restartprodmodbus();
-            }
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
+            readfailed++;
+            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
 }
 
@@ -425,23 +399,17 @@ var readstats = function () {
             console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
         .catch(function (e) {
-            console.log('#7 Stats Garbage')
+            console.error('#7 Stats Garbage')
             mbsState = MBS_STATE_FAIL_READ_STATS;
-
-            failedPreRead++;
-            if (failedPreRead > failcounter) {
-                console.log("FAILED: " + failedPreRead)
-                failedPreRead = 0;
-                restartprodmodbus();
-            }
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
+            readfailed++;
+            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
 }
 
 function restartprodmodbus() {
     exec(restartCommand, (err, stdout, stderr) => {
         if (!err && !stderr) {
-            console.log(new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }), `App restarted!!!`);
+            // console.log(new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }), `App restarted!!!`);
         }
         else if (err || stderr) {
             console.log(new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }), `Error in executing ${restartCommand}`, err || stderr);

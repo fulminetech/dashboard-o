@@ -134,10 +134,15 @@ async function fetchpayload() {
     // const res1 = await fetch(machineURL);
 
     fetch(payloadURL)
-        .then((resp) => resp.json()) // Transform the data into json
-        .then(function (data) {
-            // Here you get the data to modify as you please
-            payload1 = data
+        .then(res => {
+            if (res.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return res.json();
+        })
+        .then(data => {
+
+            payload1 = data;
 
             payload.punch1.precompression = payload1.punch1.precompression;
             payload.punch1.maincompression = payload1.punch1.maincompression;
@@ -182,18 +187,23 @@ async function fetchpayload() {
             payload.precompression_avg = payload1.precompression_avg;
             payload.maincompression_avg = payload1.maincompression_avg;
             payload.ejection_avg = payload1.ejection_avg;
+
         })
-        .catch(function (error) {
-            // If there is any error you will catch them here
-            console.log("[ PAYLOAD FETCH ERROR ]")
+        .catch(err => {
+            console.error("[ MODBUS SERVER OFFLINE ]");
         });
 
     fetch(machineURL)
-        .then((resp) => resp.json()) // Transform the data into json
-        .then(function (data) {
-            // Here you get the data to modify as you please
-            machine1 = data
-            
+        .then(res => {
+            if (res.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return res.json();
+        })
+        .then(data => {
+
+            machine1 = data;
+
             machine.maincompression_upperlimit = machine1.maincompression_upperlimit;
             machine.maincompression_lowerlimit = machine1.maincompression_lowerlimit;
             machine.precompression_upperlimit = machine1.precompression_upperlimit;
@@ -223,11 +233,10 @@ async function fetchpayload() {
             machine.time.hou = machine1.time.hour;
             machine.time.minute = machine1.time.minute;
             machine.time.second = machine1.time.second;
-
+            
         })
-        .catch(function (error) {
-            // If there is any error you will catch them here
-            console.log("[ MACHINE FETCH ERROR ]")
+        .catch(err => {
+            console.error("[ MODBUS SERVER OFFLINE ]");
         });
 
 };
