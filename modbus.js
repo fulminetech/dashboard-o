@@ -1,9 +1,11 @@
 var ModbusRTU = require("modbus-serial");
 const express = require("express");
 const { exec } = require('child_process');
-const restartCommand = "pm2 restart prod-modbus";
+const fetch = require('cross-fetch');
 
 const app = express();
+
+const pm21restartURL = 'http://10.0.0.65:3000/restart/pm2-1';
 
 // Timestamp for which returns current date and time 
 var noww = new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
@@ -407,14 +409,15 @@ var readstats = function () {
 }
 
 function restartprodmodbus() {
-    exec(restartCommand, (err, stdout, stderr) => {
-        if (!err && !stderr) {
-            // console.log(new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }), `App restarted!!!`);
-        }
-        else if (err || stderr) {
-            console.log(new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }), `Error in executing ${restartCommand}`, err || stderr);
-        }
-    });
+    fetch(pm21restartURL)
+        .then(res => {
+            if (res.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+        }) 
+        .catch(err => {
+            console.error(err);
+        });
 }
 
 app.use("/api/payload", (req, res) => {
