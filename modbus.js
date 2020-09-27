@@ -1,6 +1,8 @@
 var ModbusRTU = require("modbus-serial");
 const express = require("express");
 const { exec } = require('child_process');
+const restartCommand = "pm2 restart 0";
+
 const app = express();
 
 // Timestamp for which returns current date and time 
@@ -149,7 +151,7 @@ var mbsTimeout = 1000;
 var mbsScan = 53;
 
 let failedPreRead = 0;
-let failcounter = 3;
+let failcounter = 5;
 let timecheck = 3;
 let timetemp = 0;
 
@@ -177,6 +179,8 @@ var connectClient = function () {
 }
 
 connectClient()
+
+
 
 // Sync Time from PLC
 var syncplctime = function () {
@@ -284,7 +288,7 @@ var readpre = function () {
             if (failedPreRead > failcounter) {
                 console.log("FAILED: " + failedPreRead)
                 failedPreRead = 0;
-                waiting()
+                restartprodmodbus();
             }
 
             console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
@@ -314,7 +318,7 @@ var readmain = function () {
             if (failedPreRead > failcounter) {
                 console.log("FAILED: " + failedPreRead)
                 failedPreRead = 0;
-                waiting()
+                restartprodmodbus();
             }
             console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
@@ -343,7 +347,7 @@ var readejn = function () {
             if (failedPreRead > failcounter) {
                 console.log("FAILED: " + failedPreRead)
                 failedPreRead = 0;
-                waiting()
+                restartprodmodbus();
             }
             console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
@@ -367,7 +371,7 @@ var readavg = function () {
             if (failedPreRead > failcounter) {
                 console.log("FAILED: " + failedPreRead)
                 failedPreRead = 0;
-                waiting()
+                restartprodmodbus();
             }
             console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
@@ -396,7 +400,7 @@ var readstatus = function () {
             if (failedPreRead > failcounter) {
                 console.log("FAILED: " + failedPreRead)
                 failedPreRead = 0;
-                waiting()
+                restartprodmodbus();
             }
             console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
@@ -427,12 +431,22 @@ var readstats = function () {
             failedPreRead++;
             if (failedPreRead > failcounter) {
                 console.log("FAILED: " + failedPreRead)
-
                 failedPreRead = 0;
-                waiting()
+                restartprodmodbus();
             }
             console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
+}
+
+function restartprodmodbus() {
+    exec(restartCommand, (err, stdout, stderr) => {
+        if (!err && !stderr) {
+            console.log(new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }), `App restarted!!!`);
+        }
+        else if (err || stderr) {
+            console.log(new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' }), `Error in executing ${restartCommand}`, err || stderr);
+        }
+    });
 }
 
 app.use("/api/payload", (req, res) => {

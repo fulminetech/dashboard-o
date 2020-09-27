@@ -7,11 +7,11 @@ const Gpio = require('onoff').Gpio;
 const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
 
 const Influx = require('influxdb-nodejs');
-const flux = new Influx('http://10.0.0.65:8086/new');
+const flux = new Influx('http://localhost:8086/new');
 
 // Timestamp for which returns current date and time 
 var noww = new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
-console.log(`[ STARTING DATA: ${noww} ]`)
+console.log(`[ STARTING INFLUX : ${noww} ]`)
 
 const payloadURL = 'http://10.0.0.65:3128/api/payload';
 const machineURL = 'http://10.0.0.65:3128/api/machine';
@@ -130,17 +130,14 @@ function startmodbus() {
 }
 
 async function fetchpayload() {
-    const res = await fetch(payloadURL);
-    const res1 = await fetch(machineURL);
-    if (res.status >= 400 || res1.status >= 400) {
-        throw new Error("Bad response from server");
-    }
-    i++;
-    if (i >= 2) {
-        buffer = await res.json();
-        if (buffer !== undefined) {
-            payload1 = buffer;
+    // const res = await fetch(payloadURL);
+    // const res1 = await fetch(machineURL);
 
+    fetch(payloadURL)
+        .then((resp) => resp.json()) // Transform the data into json
+        .then(function (data) {
+            // Here you get the data to modify as you please
+            payload1 = data
 
             payload.punch1.precompression = payload1.punch1.precompression;
             payload.punch1.maincompression = payload1.punch1.maincompression;
@@ -185,49 +182,54 @@ async function fetchpayload() {
             payload.precompression_avg = payload1.precompression_avg;
             payload.maincompression_avg = payload1.maincompression_avg;
             payload.ejection_avg = payload1.ejection_avg;
-        };
+        })
+        .catch(function (error) {
+            // If there is any error you will catch them here
+            console.log("[ PAYLOAD FETCH ERROR ]")
+        });
 
-    } else {
-        console.log(' PAYLOAD NOT RECEIVED ')
-    }
+    fetch(machineURL)
+        .then((resp) => resp.json()) // Transform the data into json
+        .then(function (data) {
+            // Here you get the data to modify as you please
+            machine1 = data
+            
+            machine.maincompression_upperlimit = machine1.maincompression_upperlimit;
+            machine.maincompression_lowerlimit = machine1.maincompression_lowerlimit;
+            machine.precompression_upperlimit = machine1.precompression_upperlimit;
+            machine.precompression_lowerlimit = machine1.precompression_lowerlimit;
+            machine.ejection_upperlimit = machine1.ejection_upperlimit;
 
-    buffer1 = await res1.json();
-    if (buffer1 !== undefined) {
-        machine1 = buffer1;
+            //machine.stats.count = machine1.count;
+            //machine.stats.tablets_per_hour = machine1.tablets_per_hour;
+            //machine.stats.rpm = machine1.rpm;
+            //machine.stats.active_punches = machine1.active_punches;
+            //machine.stats.mainMotor_trip = machine1.mainMotorTrip;
+            //machine.stats.feederMotor_trip = machine1.feederMotor_trip;
+            //machine.stats.emergencyStop_pressed = machine1.emergencyStop_pressed;
+            //machine.stats.safetyguard_open = machine1.safetyguard_open;
+            //machine.stats.system_overload = machine1.system_overload;
 
-        machine.maincompression_upperlimit = machine1.maincompression_upperlimit;
-        machine.maincompression_lowerlimit = machine1.maincompression_lowerlimit;
-        machine.precompression_upperlimit = machine1.precompression_upperlimit;
-        machine.precompression_lowerlimit = machine1.precompression_lowerlimit;
-        machine.ejection_upperlimit = machine1.ejection_upperlimit;
+            // machine.control.inching = machine1.control.inching;
+            // machine.control.machine_start = machine1.control.machine_start;
+            // machine.control.machine_stop = machine1.control.machine_stop;
+            // machine.control.turret_run = machine1.control.turret_run;
+            // machine.control.turret_rpm = machine1.control.turret_rpm;
+            // machine.control.forceFeeder_rpm = machine1.control.forceFeeder_rpm;
 
-        //machine.stats.count = machine1.count;
-        //machine.stats.tablets_per_hour = machine1.tablets_per_hour;
-        //machine.stats.rpm = machine1.rpm;
-        //machine.stats.active_punches = machine1.active_punches;
-        //machine.stats.mainMotor_trip = machine1.mainMotorTrip;
-        //machine.stats.feederMotor_trip = machine1.feederMotor_trip;
-        //machine.stats.emergencyStop_pressed = machine1.emergencyStop_pressed;
-        //machine.stats.safetyguard_open = machine1.safetyguard_open;
-        //machine.stats.system_overload = machine1.system_overload;
+            machine.time.date = machine1.time.date;
+            machine.time.month = machine1.time.month;
+            machine.time.year = machine1.time.year;
+            machine.time.hou = machine1.time.hour;
+            machine.time.minute = machine1.time.minute;
+            machine.time.second = machine1.time.second;
 
-        // machine.control.inching = machine1.control.inching;
-        // machine.control.machine_start = machine1.control.machine_start;
-        // machine.control.machine_stop = machine1.control.machine_stop;
-        // machine.control.turret_run = machine1.control.turret_run;
-        // machine.control.turret_rpm = machine1.control.turret_rpm;
-        // machine.control.forceFeeder_rpm = machine1.control.forceFeeder_rpm;
+        })
+        .catch(function (error) {
+            // If there is any error you will catch them here
+            console.log("[ MACHINE FETCH ERROR ]")
+        });
 
-        machine.time.date = machine1.time.date;
-        machine.time.month = machine1.time.month;
-        machine.time.year = machine1.time.year;
-        machine.time.hou = machine1.time.hour;
-        machine.time.minute = machine1.time.minute;
-        machine.time.second = machine1.time.second;
-
-    } else {
-        console.log(' MACHINE NOT RECEIVED ')
-    }
 };
 
 // --+++=== DATABASE WRITE ===+++-- //
@@ -401,6 +403,7 @@ var watchproxy = function () {
             throw err;
         }
         rotation++;
+        machine.stats.status = "ONLINE";
         payload.rotation_no = rotation;
         writePayload();
     });

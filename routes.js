@@ -14,7 +14,7 @@ const rebootCommand = "sudo reboot -h now"
 // Influx Imports
 const Influx = require('influxdb-nodejs');
 const { query } = require("express");
-const client = new Influx(`http://10.0.0.65:8086/new`);
+const client = new Influx(`http://localhost:8086/new`);
 
 const {
     payload, machine, watchproxy, startmodbus
