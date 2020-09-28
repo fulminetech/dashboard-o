@@ -10,7 +10,7 @@ sudo apt install npm
 #Download node  installer (Will have to delete old one manually) Run ``sudo n`` and install latest node version 
 sudo npm install n pm2 -g
 
-#Install influx and create database new --> https://docs.influxdata.com/influxdb/v1.8/introduction/install/
+#Install influx and create database new --> https://docs.influxdata.com/influxdb/v1.8/introduction/install/ sudo systemctl disable influxdb.service sudo systemctl start influxdb.service
 
 #Clone Dashboard
 cd ~
