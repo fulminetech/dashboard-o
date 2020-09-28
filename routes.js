@@ -13,10 +13,12 @@ const restart1Command = "pm2 restart prod-modbus"
 
 const rebootCommand = "sudo reboot -h now"
 
+const host = "10.0.0.65"
+
 // Influx Imports
 const Influx = require('influxdb-nodejs');
 const { query } = require("express");
-const client = new Influx(`http://localhost:8086/new`);
+const client = new Influx(`http://${host}:8086/new`);
 
 const {
     payload, machine, watchproxy, startmodbus

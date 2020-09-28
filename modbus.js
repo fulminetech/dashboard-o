@@ -1,11 +1,9 @@
 var ModbusRTU = require("modbus-serial");
 const express = require("express");
 const { exec } = require('child_process');
-const fetch = require('cross-fetch');
+const restart1Command = "pm2 restart prod-modbus"
 
 const app = express();
-
-const pm21restartURL = "http://10.0.0.65:3000/restart/pm2-1"
 
 // Timestamp for which returns current date and time 
 var noww = new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
@@ -257,7 +255,7 @@ var runModbus = function () {
     machine.stats.status = "ONLINE";
     
     if (readfailed > failcounter) {
-        // readfailed = 0;
+        readfailed = 0;
         restartprodmodbus();
     }
 
@@ -409,15 +407,11 @@ var readstats = function () {
 }
 
 function restartprodmodbus() {
-    fetch(pm21restartURL)
-        .then(res => {
-            if (res.status >= 400) {
-                throw new Error("Bad response from server");
-            }
-        }) 
-        .catch(err => {
-            console.error(err);
-        });
+    exec(restart1Command, (err, stdout, stderr) => {
+        // handle err if you like!
+        console.log(`[ RESTARTING: prod-modbus ]`);
+        console.log(`${stdout}`);
+    });
 }
 
 app.use("/api/payload", (req, res) => {

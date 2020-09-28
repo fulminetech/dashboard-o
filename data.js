@@ -6,15 +6,17 @@ const CronJob = require('cron').CronJob;
 const Gpio = require('onoff').Gpio;
 const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
 
+const host = "10.0.0.65"
+
 const Influx = require('influxdb-nodejs');
-const flux = new Influx('http://localhost:8086/new');
+const flux = new Influx(`http://${host}:8086/new`);
 
 // Timestamp for which returns current date and time 
 var noww = new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
 console.log(`[ STARTING INFLUX : ${noww} ]`)
 
-const payloadURL = 'http://10.0.0.65:3128/api/payload';
-const machineURL = 'http://10.0.0.65:3128/api/machine';
+const payloadURL = `http://${host}:3128/api/payload`;
+const machineURL = `http://${host}:3128/api/machine`;
 var i = 0
 
 var temp_recepie = "DEFAULT";
