@@ -1,11 +1,11 @@
 {
   "name": "version2",
-  "version": "2.2.0",
-  "description": "Isolated MODBUS live",
-  "main": "index.js",
+  "version": "2.2.1",
+  "description": "Only stats fetch pending",
+  "main": "routes.js",
   "scripts": {
-    "dev": "echo [ NO DEV CONFIG ] ",
-    "live": "npm install && pm2 start routes.js --name prod-routes && pm2 start modbus.js --name prod-modbus",
+    "install": "npm install",
+    "live": "pm2 start routes.js --name prod-routes && pm2 start modbus.js --name prod-modbus",
     "build:css": "tailwind build src/style.css -o html/style.css"
   },
   "keywords": [],
