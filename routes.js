@@ -82,6 +82,9 @@ app.get("/favicon-16x16.png", (req, res) => {
 app.get("/site.webmanifest", (req, res) => {
     res.sendFile(path.join(__dirname + "/favicon_io/site.webmanifest"));
 });
+app.get("/background", (req, res) => {
+    res.sendFile(path.join(__dirname + "/background.png"));
+});
 
 // Routes
 app.get("/", (req, res) => {

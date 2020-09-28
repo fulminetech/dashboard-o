@@ -250,6 +250,23 @@
                     </div>
                 </div> -->
 
+                <!-- Rotation Number Metric Card-->
+                <div class="w-full p-3">
+                    <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
+                        <div class="flex flex-row items-center">
+                            <div class="flex-shrink px-4">
+                                <div class="rounded p-3 bg-blue-700"><i class="fas fa-cog fa-1x fa-fw fa-inverse"></i>
+                                </div>
+                            </div>
+                            <div class="flex-1 pt-3 text-center pr-3">
+                                <h5 class="font-bold text-xl uppercase text-gray-400">Rotation Number</h5>
+                                    <h3 id="rotation1_number_metric" class="font-bold text-2xl text-gray-500">
+                                    </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!--Production Count Metric Card-->
                 <div class="w-full p-3">
                     <div class="bg-gray-900 border border-gray-800 rounded shadow p-2">
@@ -1478,6 +1495,7 @@
 
                     document.getElementById("batch_number_metric").innerHTML = payload.batch;
                     document.getElementById("rotation_number_metric").innerHTML = payload.rotation_no;
+                    document.getElementById("rotation1_number_metric").innerHTML = payload.rotation_no;
                     document.getElementById("punch_number_metric").innerHTML = payload.present_punch;
 
                     document.getElementById("avg-pre").innerHTML = payload.precompression_avg;
@@ -1922,7 +1940,7 @@
                     document.getElementById("maincompression_upperlimit_metric").innerHTML = machine.maincompression_upperlimit;
                     document.getElementById("maincompression_lowerlimit_metric").innerHTML = machine.maincompression_lowerlimit;
                     document.getElementById("ejection_limit_metric").innerHTML = machine.ejection_upperlimit;
-                    
+
                 })
                 .catch(function (error) {
                     // If there is any error you will catch them here

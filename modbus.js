@@ -166,7 +166,7 @@ var connectClient = function () {
     client.connectRTUBuffered("/dev/ttyUSB0", { baudRate: baudRate, parity: 'none' })
         .then(function () {
             mbsState = MBS_STATE_GOOD_CONNECT;
-            
+
             console.log(`[ CONNECTED ]`)
         })
         .then(function () {
@@ -237,6 +237,10 @@ var runModbus = function () {
             break;
 
         case MBS_STATE_GOOD_READ_STATUS || MBS_STATE_FAIL_READ_STATUS:
+            nextAction = readstats;
+            break;
+
+        case MBS_STATE_GOOD_READ_STATS || MBS_STATE_FAIL_READ_STATS:
             nextAction = readpre;
             break;
 
@@ -246,14 +250,14 @@ var runModbus = function () {
 
         default:
         // nothing to do, keep scanning until actionable case
-            
+
     }
 
     //console.log();
     // console.log(nextAction);
 
     machine.stats.status = "ONLINE";
-    
+
     if (readfailed > failcounter) {
         readfailed = 0;
         restartprodmodbus();
@@ -381,25 +385,65 @@ var readstatus = function () {
 }
 
 var readstats = function () {
-    client.readHoldingRegisters(stats_address, 11)
+    client.readHoldingRegisters(stats_address, 20)
         .then(function (stats_data) {
-            // machine.stats.active_punches = stats_data.data[0];
-            // payload.data_number = stats_data.data[1];
-            // payload.present_punch = stats_data.data[2];
-            // machine.stats.count = stats_data.data[3];
-            // machine.stats.tablets_per_hour = stats_data.data[4];
-            // machine.control.turret_rpm = stats.data[5];
-            // machine.maincompression_upperlimit = stats_data.data[6];
-            // machine.maincompression_lowerlimit = stats_data.data[7];
-            // machine.precompression_upperlimit = stats_data.data[8];
-            // machine.precompression_lowerlimit = stats_data.data[9];
-            // machine.ejection_upperlimit = stats_data.data[10];
+
+            console.log(stats_data)
+
+            // Active Punches
+            let active_punches = stats_data.data[0]; // 0-255
+            machine.stats.active_punches = ((active_punches + 1) / 32);
+
+            // Current rotation
+            let data_number = stats_data.data[1]; // 32-bit 
+            let data_number_mul = stats_data.data[2]; // Multiplier
+
+            if (data_number_mul == 0) {
+                payload.data_number = data_number;
+            }
+            else {
+                payload.data_number = ((2 ^ 16 * data_number_mul) + data_number);
+            }
+
+            // Present Punch
+            payload.present_punch = stats_data.data[5];
+
+            // Production count
+            let count = stats_data.data[6];
+            let count_mul = stats_data.data[7];
+
+            if (count_mul == 0) {
+                machine.stats.count = count;
+            } else {
+                machine.stats.count = ((2 ^ 16 * count_mul) + count);
+            }
+
+            // Tablet per hour [ Max: 8x60x60=28800 ]
+            let tablets_per_hour = (machine.stats.active_punches * machine.control.turret_rpm * 60);
+            machine.stats.tablets_per_hour = tablets_per_hour;
+
+            machine.control.turret_rpm = stats.data[14];
+
+            // Compression Limits
+            machine.maincompression_upperlimit = stats_data.data[15];
+            machine.maincompression_lowerlimit = stats_data.data[16];
+            machine.precompression_upperlimit = stats_data.data[17];
+            machine.precompression_lowerlimit = stats_data.data[18];
+            machine.ejection_upperlimit = stats_data.data[19];
 
             mbsState = MBS_STATE_GOOD_READ_STATS;
-            console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
+            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
         })
         .catch(function (e) {
-            console.error('#7 Stats Garbage')
+            console.error('[ #7 Stats Garbage ]')
+            mbsState = MBS_STATE_FAIL_READ_STATS;
+            readfailed++;
+            // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
+        })
+
+    client.writeRegisters(8146, tablets_per_hour)
+        .catch(function (e) {
+            console.error('[ #8 Tablet per hour Write Failed ]')
             mbsState = MBS_STATE_FAIL_READ_STATS;
             readfailed++;
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
