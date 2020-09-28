@@ -146,6 +146,7 @@ async function fetchpayload() {
 
             payload1 = data;
 
+            payload.present_punch = payload1.present_punch;
             payload.punch1.precompression = payload1.punch1.precompression;
             payload.punch1.maincompression = payload1.punch1.maincompression;
             payload.punch1.ejection = payload1.punch1.ejection;

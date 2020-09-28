@@ -409,7 +409,7 @@ var readstats = function () {
             // }
 
             // // Present Punch
-            // payload.present_punch = stats_data.data[5];
+            payload.present_punch = stats_data.data[5];
 
             // // Production count
             // var count = stats_data.data[6];
