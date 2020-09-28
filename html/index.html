@@ -317,7 +317,7 @@
                         <input class="carousel-open" type="radio" id="carousel-1" name="carousel" aria-hidden="true"
                             hidden="" checked="checked">
                         <div class="carousel-item absolute opacity-0 border overflow-y-auto border-gray-800 rounded shadow"
-                            style="height:90vh;">
+                            style="height:92vh;">
                             <div class="flex flex-wrap w-full text-center">
 
                                 <!-- Realtime Banner -->
@@ -388,10 +388,16 @@
                                                 </div>
                                             </div>
                                             <div class="flex-1 pt-3 text-right pr-3">
-                                                <h5 class="font-bold text-2xl uppercase text-gray-400">Pre Compression
-                                                    Limit:
+                                                <h5 class="font-bold text-2xl uppercase text-gray-400">Pre Comp.
+                                                    Upper Tolerance:
                                                     <a id="precompression_upperlimit_metric"
-                                                        class="font-bold text-3xl text-gray-500">
+                                                        class="font-bold text-2xl text-gray-500">10
+                                                    </a>
+                                                </h5>
+                                                <h5 class="font-bold text-2xl uppercase text-gray-400">Pre Comp.
+                                                    Lower Tolerance:
+                                                    <a id="precompression_lowerlimit_metric"
+                                                        class="font-bold text-2xl text-gray-500">17
                                                     </a>
                                                 </h5>
                                             </div>
@@ -409,10 +415,16 @@
                                                 </div>
                                             </div>
                                             <div class="flex-1 pt-3 text-right pr-3">
-                                                <h5 class="font-bold text-2xl uppercase text-gray-400">Main Compression
-                                                    Limit:
+                                                <h5 class="font-bold text-2xl uppercase text-gray-400">Main Comp.
+                                                    Upper Tolerance:
                                                     <a id="maincompression_upperlimit_metric"
-                                                        class="font-bold text-3xl text-gray-500">
+                                                        class="font-bold text-2xl text-gray-500">10
+                                                    </a>
+                                                </h5>
+                                                <h5 class="font-bold text-2xl uppercase text-gray-400">Main Comp.
+                                                    Lower Tolerance:
+                                                    <a id="maincompression_lowerlimit_metric"
+                                                        class="font-bold text-2xl text-gray-500">17
                                                     </a>
                                                 </h5>
                                             </div>
@@ -430,7 +442,8 @@
                                                 </div>
                                             </div>
                                             <div class="flex-1 pt-3 text-right pr-3">
-                                                <h5 class="font-bold text-2xl uppercase text-gray-400">Ejection Limit:
+                                                <h5 class="font-bold text-2xl uppercase text-gray-400">Ejection Upper
+                                                    Tolerance:
                                                     <a id="ejection_limit_metric"
                                                         class="font-bold text-3xl text-gray-500">
                                                     </a>
@@ -576,7 +589,7 @@
                         <input class="carousel-open" type="radio" id="carousel-2" name="carousel" aria-hidden="true"
                             hidden="">
                         <div class="carousel-item absolute opacity-0 border overflow-y-auto border-gray-800 rounded shadow"
-                            style="height:90vh;">
+                            style="height:92vh;">
                             <div class="flex flex-wrap w-full text-center">
 
                                 <!--Pre Compression Graph-->
@@ -648,7 +661,7 @@
                         <input class="carousel-open" type="radio" id="carousel-3" name="carousel" aria-hidden="true"
                             hidden="">
                         <div class="carousel-item absolute opacity-0 border overflow-y-auto border-gray-800 rounded shadow"
-                            style="height:90vh;">
+                            style="height:92vh;">
                             <div class="flex flex-wrap w-full text-center">
 
                                 <!-- Search Banner -->
@@ -1097,7 +1110,6 @@
                     }
                 }]
             },
-
         };
         var pregraph = Chart.Bar(pregraphcanvas, {
             data: pregraphdata,
@@ -1463,12 +1475,6 @@
                 .then(function (data) {
                     // Here you get the data to modify as you please
                     payload = data
-
-                    var pre_upper = 35;
-                    var pre_lower = 10;
-                    var main_upper = 40;
-                    var main_lower = 10;
-                    var ejn_upper = 12;
 
                     document.getElementById("batch_number_metric").innerHTML = payload.batch;
                     document.getElementById("rotation_number_metric").innerHTML = payload.rotation_no;
@@ -1871,6 +1877,13 @@
 
     <!-- Machine API fetch -->
     <script>
+
+        var pre_upper = 35;
+        var pre_lower = 10;
+        var main_upper = 40;
+        var main_lower = 10;
+        var ejn_upper = 12;
+
         // Used for machine related metric cards
         async function fetchmachineapi() {
 
@@ -1898,16 +1911,17 @@
                     document.getElementById("recipie_id_metric").innerHTML = machine.product.recipie_id;
                     //document.getElementById("name_metric").innerHTML = machine.product.name;
 
+                    machine.precompression_upperlimit = pre_upper
+                    machine.precompression_lowerlimit = pre_lower
+                    machine.maincompression_upperlimit = main_upper
+                    machine.maincompression_lowerlimit = main_lower
+                    machine.ejection_upperlimit = ejn_upper
+
                     document.getElementById("precompression_upperlimit_metric").innerHTML = machine.precompression_upperlimit;
+                    document.getElementById("precompression_lowerlimit_metric").innerHTML = machine.precompression_lowerlimit;
                     document.getElementById("maincompression_upperlimit_metric").innerHTML = machine.maincompression_upperlimit;
+                    document.getElementById("maincompression_lowerlimit_metric").innerHTML = machine.maincompression_lowerlimit;
                     document.getElementById("ejection_limit_metric").innerHTML = machine.ejection_upperlimit;
-
-                    pre_upper = machine.precompression_upperlimit;
-                    pre_lower = machine.precompression_lowerlimit;
-                    main_upper = machine.maincompression_upperlimit;
-                    main_lower = machine.maincompression_lowerlimit;
-                    ejn_upper = machine.ejection_upperlimit;
-
                     
                 })
                 .catch(function (error) {
