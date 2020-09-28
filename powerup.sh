@@ -17,7 +17,7 @@ cd ~
 git clone https://github.com/fulminetech/dashboard-o
 
 # To start the service
-cd dashboard-o
+cd dashboard-o    
 npm run install
 
 # Spawn and daemonise systemctl
