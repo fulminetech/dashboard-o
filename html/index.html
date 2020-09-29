@@ -978,14 +978,14 @@
                     pointHoverBorderWidth: 2,
                     pointRadius: 5,
                     data: [
-                        6.5,
-                        6.5,
-                        6.5,
-                        6.5,
-                        6.5,
-                        6.5,
-                        6.5,
-                        6.5,
+                        35,
+                        35,
+                        35,
+                        35,
+                        35,
+                        35,
+                        35,
+                        35,
                     ],
                     type: 'line',
                     order: 1,
@@ -1066,8 +1066,8 @@
                     label: "Upper Tolerance",
                     fill: false,
                     lineTension: 0.1,
-                    backgroundColor: "#F0F6F7FF",
-                    borderColor: "#F0F6F7FF",
+                    backgroundColor: "#FF0000FF",
+                    borderColor: "#FF0000FF",
                     pointBorderColor: "rgba(75,192,192,1)",
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: "rgba(75,192,192,1)",
@@ -1076,14 +1076,14 @@
                     pointRadius: 5,
                     pointHitRadius: 10,
                     data: [
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
                     ],
                     type: 'line',
                 },
@@ -1091,8 +1091,8 @@
                     label: "Lower Tolerance",
                     fill: false,
                     lineTension: 0.1,
-                    backgroundColor: "#F0F6F7FF",
-                    borderColor: "#F0F6F7FF",
+                    backgroundColor: "#ffff00FF",
+                    borderColor: "#ffff00FF",
                     pointBorderColor: "rgba(75,192,192,1)",
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: "rgba(75,192,192,1)",
@@ -1101,14 +1101,14 @@
                     pointRadius: 5,
                     pointHitRadius: 10,
                     data: [
-                        2,
-                        2,
-                        2,
-                        2,
-                        2,
-                        2,
-                        2,
-                        2,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
                     ],
                     type: 'line',
                 },
@@ -1174,8 +1174,8 @@
                     label: "Upper Tolerance",
                     fill: false,
                     lineTension: 0.1,
-                    backgroundColor: "#F0F6F7FF",
-                    borderColor: "#F0F6F7FF",
+                    backgroundColor: "#FF0000FF",
+                    borderColor: "#FF0000FF",
                     pointBorderColor: "rgba(75,192,192,1)",
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: "rgba(75,192,192,1)",
@@ -1184,14 +1184,14 @@
                     pointRadius: 5,
                     pointHitRadius: 10,
                     data: [
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
                     ],
                     type: 'line',
                 },
@@ -1199,8 +1199,8 @@
                     label: "Lower Tolerance",
                     fill: false,
                     lineTension: 0.1,
-                    backgroundColor: "#F0F6F7FF",
-                    borderColor: "#F0F6F7FF",
+                    backgroundColor: "#ffff00FF",
+                    borderColor: "#ffff00FF",
                     pointBorderColor: "rgba(75,192,192,1)",
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: "rgba(75,192,192,1)",
@@ -1209,14 +1209,14 @@
                     pointRadius: 5,
                     pointHitRadius: 10,
                     data: [
-                        2,
-                        2,
-                        2,
-                        2,
-                        2,
-                        2,
-                        2,
-                        2,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
                     ],
                     type: 'line',
                 },
@@ -1283,8 +1283,8 @@
                     label: "Upper Tolerance",
                     fill: false,
                     lineTension: 0.1,
-                    backgroundColor: "#F0F6F7FF",
-                    borderColor: "#F0F6F7FF",
+                    backgroundColor: "#FF0000FF",
+                    borderColor: "#FF0000FF",
                     pointBorderColor: "rgba(75,192,192,1)",
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: "rgba(75,192,192,1)",
@@ -1895,7 +1895,6 @@
 
     <!-- Machine API fetch -->
     <script>
-
         var pre_upper = 35;
         var pre_lower = 10;
         var main_upper = 40;
@@ -1934,6 +1933,51 @@
                     machine.maincompression_upperlimit = main_upper
                     machine.maincompression_lowerlimit = main_lower
                     machine.ejection_upperlimit = ejn_upper
+
+                    pregraph.data.datasets[1].data[0] = machine.precompression_upperlimit;
+                    pregraph.data.datasets[1].data[1] = machine.precompression_upperlimit;
+                    pregraph.data.datasets[1].data[2] = machine.precompression_upperlimit;
+                    pregraph.data.datasets[1].data[3] = machine.precompression_upperlimit;
+                    pregraph.data.datasets[1].data[4] = machine.precompression_upperlimit;
+                    pregraph.data.datasets[1].data[5] = machine.precompression_upperlimit;
+                    pregraph.data.datasets[1].data[6] = machine.precompression_upperlimit;
+                    pregraph.data.datasets[1].data[7] = machine.precompression_upperlimit;
+                    
+                    pregraph.data.datasets[2].data[0] = machine.precompression_lowerlimit;
+                    pregraph.data.datasets[2].data[1] = machine.precompression_lowerlimit;
+                    pregraph.data.datasets[2].data[2] = machine.precompression_lowerlimit;
+                    pregraph.data.datasets[2].data[3] = machine.precompression_lowerlimit;
+                    pregraph.data.datasets[2].data[4] = machine.precompression_lowerlimit;
+                    pregraph.data.datasets[2].data[5] = machine.precompression_lowerlimit;
+                    pregraph.data.datasets[2].data[6] = machine.precompression_lowerlimit;
+                    pregraph.data.datasets[2].data[7] = machine.precompression_lowerlimit;
+                    
+                    maingraph.data.datasets[1].data[0] = machine.maincompression_upperlimit;
+                    maingraph.data.datasets[1].data[1] = machine.maincompression_upperlimit;
+                    maingraph.data.datasets[1].data[2] = machine.maincompression_upperlimit;
+                    maingraph.data.datasets[1].data[3] = machine.maincompression_upperlimit;
+                    maingraph.data.datasets[1].data[4] = machine.maincompression_upperlimit;
+                    maingraph.data.datasets[1].data[5] = machine.maincompression_upperlimit;
+                    maingraph.data.datasets[1].data[6] = machine.maincompression_upperlimit;
+                    maingraph.data.datasets[1].data[7] = machine.maincompression_upperlimit;
+
+                    maingraph.data.datasets[2].data[0] = machine.maincompression_lowerlimit;
+                    maingraph.data.datasets[2].data[1] = machine.maincompression_lowerlimit;
+                    maingraph.data.datasets[2].data[2] = machine.maincompression_lowerlimit;
+                    maingraph.data.datasets[2].data[3] = machine.maincompression_lowerlimit;
+                    maingraph.data.datasets[2].data[4] = machine.maincompression_lowerlimit;
+                    maingraph.data.datasets[2].data[5] = machine.maincompression_lowerlimit;
+                    maingraph.data.datasets[2].data[6] = machine.maincompression_lowerlimit;
+                    maingraph.data.datasets[2].data[7] = machine.maincompression_lowerlimit;
+
+                    ejngraph.data.datasets[1].data[0] = machine.ejection_upperlimit;
+                    ejngraph.data.datasets[1].data[1] = machine.ejection_upperlimit;
+                    ejngraph.data.datasets[1].data[2] = machine.ejection_upperlimit;
+                    ejngraph.data.datasets[1].data[3] = machine.ejection_upperlimit;
+                    ejngraph.data.datasets[1].data[4] = machine.ejection_upperlimit;
+                    ejngraph.data.datasets[1].data[5] = machine.ejection_upperlimit;
+                    ejngraph.data.datasets[1].data[6] = machine.ejection_upperlimit;
+                    ejngraph.data.datasets[1].data[7] = machine.ejection_upperlimit;
 
                     document.getElementById("precompression_upperlimit_metric").innerHTML = machine.precompression_upperlimit;
                     document.getElementById("precompression_lowerlimit_metric").innerHTML = machine.precompression_lowerlimit;
@@ -2083,6 +2127,7 @@
             graph2.data.datasets[2].data[5] = payload[p6ejn];
             graph2.data.datasets[2].data[6] = payload[p7ejn];
             graph2.data.datasets[2].data[7] = payload[p8ejn];
+            
             graph2.update();
         }
     </script>
