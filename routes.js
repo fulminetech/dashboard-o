@@ -13,7 +13,7 @@ const restart1Command = "pm2 restart prod-modbus"
 
 const rebootCommand = "sudo reboot -h now"
 
-const host = "10.0.0.65"
+const host = "192.168.0.143"
 
 // Influx Imports
 const Influx = require('influxdb-nodejs');
@@ -231,7 +231,7 @@ app.get("/report/average/generate", (req, res) => {
     (async () => {
         const browser = await puppeteer.launch({ product: 'chrome', executablePath: '/usr/bin/chromium-browser' });
         const page = await browser.newPage();
-        await page.goto('http://10.0.0.65:3000/report/template', { waitUntil: 'networkidle0' });
+        await page.goto('http://192.168.0.143:3000/report/template', { waitUntil: 'networkidle0' });
         await page.pdf({ path: `batch_${report.batch}_from_${report.from}_to_${report.to}.pdf`, format: 'A4' });
         await browser.close();
     })();
