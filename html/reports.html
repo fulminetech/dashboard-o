@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    
+
     <!-- NPM package includes -->
     <link href="/font/css/all.css" rel="stylesheet">
     <script src="/charts/Chart.bundle.min.js"></script>
@@ -271,6 +271,19 @@
                                                     type="number" placeholder="TO">
                                             </form>
 
+                                            <!-- Filter Button -->
+                                            <div class="px-2">
+                                                <button 
+                                                    class="bg-blue-100 uppercase text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"
+                                                    onclick="filterbutton()">
+                                                    Filter
+                                                </button>
+                                            </div>
+
+                                            <div class="flex-1">
+                                                <h3 class="font-bold uppercase text-3xl px-1 text-gray-400">||</h3>
+                                            </div>
+
                                             <!-- PDF report Button -->
                                             <div class="px-2">
                                                 <button id="generatepdfreport"
@@ -443,6 +456,72 @@
 
             }
         }
+
+        const reportdetailsURL = `${host}/report/average/now`
+
+        async function filterbutton() {
+
+            const avgListBody = document.getElementById('avgtable');
+            let avgHTML = '';
+            avgListBody.innerHTML = avgHTML;
+
+            var a = document.getElementById("fromRotationNumber");
+            var fromname = "";
+            var i;
+            for (i = 0; i < a.length; i++) {
+                fromname += a.elements[i].value;
+            }
+
+            var b = document.getElementById("toRotationNumber");
+            var toname = "";
+            var j;
+            for (j = 0; j < b.length; j++) {
+                toname += b.elements[j].value;
+            }
+
+            var c = document.getElementById("batchname");
+            var bname = "";
+            var k;
+            for (k = 0; k < c.length; k++) {
+                bname += c.elements[k].value;
+            }
+
+            const queryAvgURL = `${host}/api/search/average/csv/${bname}`
+
+            console.log(bname);
+
+            const avgData = await fetch(queryAvgURL);
+            const avggbatch = await avgData.json();
+
+            let avglistt = avggbatch;
+
+            let from = fromname;
+            let to = toname;
+
+            function loadavglist() {
+                const avgListBody = document.getElementById('avgtable');
+                let avgHTML = '';
+
+                let i = -1;
+
+                for (let avgg of avglistt) {
+                    i++;
+                    if (i >= from && i <= to) {
+                        from++;
+                        let avgdataa = avggbatch[i]
+                        avgHTML += `<tr><td class="border border-gray-700 px-4 py-2">${avgdataa[1]}</td><td id="p1-pre" class="border border-gray-700 px-4 py-2">${avgdataa[2]}</td><td class="border border-gray-700 px-4 py-2">${avgdataa[3]}</td><td id="p1-ejn" class="border border-gray-700 px-4 py-2">${avgdataa[4]}</td></tr>`
+                    } else if (i > to) {
+                        // await fetch(generatereportURL);
+                    }
+                }
+
+                avgListBody.innerHTML = avgHTML;
+            }
+
+            loadavglist();
+
+        }
+
     </script>
 
     <!-- Generate PDF Report -->
