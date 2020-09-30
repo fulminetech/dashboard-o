@@ -6,7 +6,7 @@ const CronJob = require('cron').CronJob;
 const Gpio = require('onoff').Gpio;
 const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
 
-const host = "192.168.0.143"
+const host = "10.0.0.65"
 
 const Influx = require('influxdb-nodejs');
 const flux = new Influx(`http://${host}:8086/new`);

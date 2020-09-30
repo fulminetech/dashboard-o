@@ -260,8 +260,8 @@
                             </div>
                             <div class="flex-1 pt-3 text-center pr-3">
                                 <h5 class="font-bold text-xl uppercase text-gray-400">Rotation Number</h5>
-                                    <h3 id="rotation1_number_metric" class="font-bold text-2xl text-gray-500">
-                                    </h3>
+                                <h3 id="rotation1_number_metric" class="font-bold text-2xl text-gray-500">
+                                </h3>
                             </div>
                         </div>
                     </div>
@@ -805,17 +805,134 @@
                                     </div>
                                 </div>
 
-                                <!-- Search Compression Graph-->
+                                <!-- Rotationwise Average table -->
                                 <div class="w-full p-3">
                                     <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                        <div class="px-5 pb-5">
+                                            <table class="table-auto w-full text-center text-gray-400" height="170rem">
+                                                <thead>
+                                                    <tr class="w-30">
+                                                        <th class="text-center py-3">Rotation Number</th>
+                                                        <th id="rtn-1" class="text-center py-3">1</th>
+                                                        <th id="rtn-2" class="text-center py-3">2</th>
+                                                        <th id="rtn-3" class="text-center py-3">3</th>
+                                                        <th id="rtn-4" class="text-center py-3">4</th>
+                                                        <th id="rtn-5" class="text-center py-3">5</th>
+                                                        <th id="rtn-6" class="text-center py-3">6</th>
+                                                        <th id="rtn-7" class="text-center py-3">7</th>
+                                                        <th id="rtn-8" class="text-center py-3">8</th>
+                                                        <th id="rtn-9" class="text-center py-3">9</th>
+                                                        <th id="rtn-10" class="text-center py-3">10</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="border border-gray-700 px-4 py-2">Pre Compression
+                                                            Average (kN)
+                                                        </td>
+                                                        <td id="rtn1-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn2-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn3-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn4-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn5-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn6-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn7-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn8-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn9-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn10-pre-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="border border-gray-700 px-4 py-2">Main Compression
+                                                            Average
+                                                            (kN)</td>
+                                                        <td id="rtn1-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn2-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn3-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn4-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn5-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn6-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn7-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn8-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn9-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn10-main-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="border border-gray-700 px-4 py-2">Ejection Average
+                                                            (kN)</td>
+                                                        <td id="rtn1-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn2-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn3-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn4-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn5-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn6-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn7-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn8-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn9-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                        <td id="rtn10-ejn-search"
+                                                            class="border border-gray-700 px-4 py-2"></td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Search Compression Graph-->
+                                <div class="w-full xl:w-1/2 p-3">
+                                    <div class="bg-gray-900 border border-gray-800 rounded shadow">
                                         <div class="border-b border-gray-800 p-3">
-                                            <h5 class="font-bold uppercase text-center text-gray-400">Average
-                                                Compression
-                                                Graph</h5>
+                                            <h5 class="font-bold uppercase text-center text-gray-400">Search Rotation
+                                                Result</h5>
                                         </div>
                                         <div class="p-5">
                                             <canvas id="compression_search_graph" class="chartjs"
-                                                height="100rem"></canvas>
+                                                height="170rem"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Average Compression Graph-->
+                                <div class="w-full xl:w-1/2 p-3">
+                                    <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                        <div class="border-b border-gray-800 p-3">
+                                            <h5 class="font-bold uppercase text-center text-gray-400">Average Result
+                                            </h5>
+                                        </div>
+                                        <div class="p-5">
+                                            <canvas id="compression_avg_graph" class="chartjs" height="170rem"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -834,8 +951,8 @@
 
     <!-- APIs -->
     <script>
-        const payloadURL = 'http://192.168.0.143:3000/api/payload';
-        const machineURL = 'http://192.168.0.143:3000/api/machine';
+        const payloadURL = 'http://10.0.0.65:3000/api/payload';
+        const machineURL = 'http://10.0.0.65:3000/api/machine';
     </script>
 
     <!-- Time -->
@@ -856,6 +973,7 @@
             datasets: [
                 {
                     label: "Pre Compression",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: [
@@ -889,6 +1007,7 @@
                 },
                 {
                     label: "Main Compression",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: [
@@ -928,6 +1047,7 @@
                 },
                 {
                     label: "Ejection",
+                    yAxisID: 'B',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: [
@@ -992,6 +1112,7 @@
                     options: {
                         legend: {
                             display: false,
+
                             labels: {
                                 hidden: true
                             }
@@ -1008,14 +1129,51 @@
             showLines: true,
             scales: {
                 yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 25,
+                        labelString: 'Compression (kN)'
+                    },
+                    id: 'A',
+                    type: 'linear',
+                    position: 'left',
                     ticks: {
                         beginAtZero: true,
+                        fontSize: 20,
                         max: 50
                     }
-                }]
+                }, {
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 25,
+                        labelString: 'Ejection Compression (KG)'
+                    },
+                    id: 'B',
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: 20,
+                        max: 200
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 20,
+                        labelString: 'Punch Number'
+                    },
+                }],
             },
+            legend: {
+                display: true,
+                position: 'bottom',
+                ticks: {
+                    fontSize: 20,
+                }
+            },
+        }
 
-        };
         var graph1 = Chart.Bar(graph1canvas, {
             data: graph1data,
             options: graph1option,
@@ -1112,6 +1270,31 @@
                     ],
                     type: 'line',
                 },
+                {
+                    label: "Force Line",
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: "#ffffFFFF",
+                    borderColor: "#ffffFFFF",
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                    ],
+                    type: 'line',
+                },
             ],
         };
         var pregraphoptions = {
@@ -1125,7 +1308,7 @@
                         beginAtZero: true,
                         max: 50
                     }
-                }]
+                }],
             },
         };
         var pregraph = Chart.Bar(pregraphcanvas, {
@@ -1220,6 +1403,31 @@
                     ],
                     type: 'line',
                 },
+                {
+                    label: "Force Line",
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: "#ffffFFFF",
+                    borderColor: "#ffffFFFF",
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                    ],
+                    type: 'line',
+                },
             ],
         };
         var maingraphoptions = {
@@ -1293,14 +1501,39 @@
                     pointRadius: 5,
                     pointHitRadius: 10,
                     data: [
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
-                        4,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                    ],
+                    type: 'line',
+                },
+                {
+                    label: "Force Line",
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: "#ffffFFFF",
+                    borderColor: "#ffffFFFF",
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
                     ],
                     type: 'line',
                 },
@@ -1344,9 +1577,9 @@
                     pointRadius: 5,
                     pointHitRadius: 10,
                     data: [
-                        8,
-                        7,
-                        9,
+                        0,
+                        0,
+                        0,
                     ],
                 },
             ],
@@ -1361,12 +1594,16 @@
                     ticks: {
                         beginAtZero: true,
                         max: 50
-                    }
+                    },
+                }],
+                xAxes: [{
+                    barPercentage: 0.4
                 }]
+
             },
 
         };
-        var avggraph = Chart.Line(avggraphcanvas, {
+        var avggraph = Chart.Bar(avggraphcanvas, {
             data: avggraphdata,
             options: avggraphoptions,
         });
@@ -1465,7 +1702,6 @@
                 },
             ],
         };
-
         var graph2option = {
             showLines: true,
             scales: {
@@ -1482,6 +1718,118 @@
             options: graph2option,
         });
 
+        var graph3canvas = document.getElementById('compression_avg_graph');
+        var graph3data = {
+            labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            datasets: [
+                {
+                    label: "Pre Compression Average",
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: "#F0F6F7FF",
+                    borderColor: "#F0F6F7FF",
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                },
+                {
+                    label: "Main Compression Average",
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: "#85B3D1FF",
+                    borderColor: "#85B3D1FF",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                },
+                {
+                    label: "Ejection Average",
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: "#2460A7FF",
+                    borderColor: "#2460A7FF",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointBackgroundColor: "#fff",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                },
+            ],
+        };
+        var graph3option = {
+            showLines: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        max: 50
+                    }
+                }]
+            }
+        };
+        var graph3 = Chart.Bar(graph3canvas, {
+            data: graph3data,
+            options: graph3option,
+        });
+
     </script>
 
     <!-- PAYLOAD API fetch -->
@@ -1494,13 +1842,18 @@
                     payload = data
 
                     document.getElementById("batch_number_metric").innerHTML = payload.batch;
+                    currentBatch = payload.batch;
+
                     document.getElementById("rotation_number_metric").innerHTML = payload.rotation_no;
                     document.getElementById("rotation1_number_metric").innerHTML = payload.rotation_no;
                     document.getElementById("punch_number_metric").innerHTML = payload.present_punch;
 
                     document.getElementById("avg-pre").innerHTML = payload.precompression_avg;
+                    avggraph.data.datasets[0].data[0] = payload.precompression_avg;
                     document.getElementById("avg-main").innerHTML = payload.maincompression_avg;
+                    avggraph.data.datasets[0].data[1] = payload.maincompression_avg;
                     document.getElementById("avg-ejn").innerHTML = payload.ejection_avg;
+                    avggraph.data.datasets[0].data[2] = payload.ejection_avg;
 
                     if (payload.punch1.status == false) {
                         document.getElementById("p1-status").style.background = "red";
@@ -1519,11 +1872,9 @@
                         ejngraph.data.datasets[0].data[0] = payload.punch1.ejection;
 
                         if (payload.punch1.precompression > pre_upper) {
-                            console.log('Hello pre')
                             graph1.data.datasets[0].backgroundColor[0] = "#FF0000FF";
                             pregraph.data.datasets[0].backgroundColor[0] = "#FF0000FF";
                         } else if (payload.punch1.precompression < pre_lower) {
-                            console.log('Hello pre')
                             graph1.data.datasets[0].backgroundColor[0] = "#ffff00FF";
                             pregraph.data.datasets[0].backgroundColor[0] = "#ffff00FF";
                         } else {
@@ -1880,6 +2231,7 @@
                     pregraph.update();
                     maingraph.update();
                     ejngraph.update();
+                    avggraph.update();
 
                 })
                 .catch(function (error) {
@@ -1900,6 +2252,10 @@
         var main_upper = 40;
         var main_lower = 10;
         var ejn_upper = 12;
+
+        var pre_force_line = 25
+        var main_force_line = 25
+        var ejn_force_line = 10
 
         // Used for machine related metric cards
         async function fetchmachineapi() {
@@ -1942,7 +2298,7 @@
                     pregraph.data.datasets[1].data[5] = machine.precompression_upperlimit;
                     pregraph.data.datasets[1].data[6] = machine.precompression_upperlimit;
                     pregraph.data.datasets[1].data[7] = machine.precompression_upperlimit;
-                    
+
                     pregraph.data.datasets[2].data[0] = machine.precompression_lowerlimit;
                     pregraph.data.datasets[2].data[1] = machine.precompression_lowerlimit;
                     pregraph.data.datasets[2].data[2] = machine.precompression_lowerlimit;
@@ -1951,7 +2307,7 @@
                     pregraph.data.datasets[2].data[5] = machine.precompression_lowerlimit;
                     pregraph.data.datasets[2].data[6] = machine.precompression_lowerlimit;
                     pregraph.data.datasets[2].data[7] = machine.precompression_lowerlimit;
-                    
+
                     maingraph.data.datasets[1].data[0] = machine.maincompression_upperlimit;
                     maingraph.data.datasets[1].data[1] = machine.maincompression_upperlimit;
                     maingraph.data.datasets[1].data[2] = machine.maincompression_upperlimit;
@@ -1979,6 +2335,33 @@
                     ejngraph.data.datasets[1].data[6] = machine.ejection_upperlimit;
                     ejngraph.data.datasets[1].data[7] = machine.ejection_upperlimit;
 
+                    pregraph.data.datasets[3].data[0] = pre_force_line;
+                    pregraph.data.datasets[3].data[1] = pre_force_line;
+                    pregraph.data.datasets[3].data[2] = pre_force_line;
+                    pregraph.data.datasets[3].data[3] = pre_force_line;
+                    pregraph.data.datasets[3].data[4] = pre_force_line;
+                    pregraph.data.datasets[3].data[5] = pre_force_line;
+                    pregraph.data.datasets[3].data[6] = pre_force_line;
+                    pregraph.data.datasets[3].data[7] = pre_force_line;
+
+                    maingraph.data.datasets[3].data[0] = main_force_line;
+                    maingraph.data.datasets[3].data[1] = main_force_line;
+                    maingraph.data.datasets[3].data[2] = main_force_line;
+                    maingraph.data.datasets[3].data[3] = main_force_line;
+                    maingraph.data.datasets[3].data[4] = main_force_line;
+                    maingraph.data.datasets[3].data[5] = main_force_line;
+                    maingraph.data.datasets[3].data[6] = main_force_line;
+                    maingraph.data.datasets[3].data[7] = main_force_line;
+
+                    ejngraph.data.datasets[2].data[0] = ejn_force_line;
+                    ejngraph.data.datasets[2].data[1] = ejn_force_line;
+                    ejngraph.data.datasets[2].data[2] = ejn_force_line;
+                    ejngraph.data.datasets[2].data[3] = ejn_force_line;
+                    ejngraph.data.datasets[2].data[4] = ejn_force_line;
+                    ejngraph.data.datasets[2].data[5] = ejn_force_line;
+                    ejngraph.data.datasets[2].data[6] = ejn_force_line;
+                    ejngraph.data.datasets[2].data[7] = ejn_force_line;
+
                     document.getElementById("precompression_upperlimit_metric").innerHTML = machine.precompression_upperlimit;
                     document.getElementById("precompression_lowerlimit_metric").innerHTML = machine.precompression_lowerlimit;
                     document.getElementById("maincompression_upperlimit_metric").innerHTML = machine.maincompression_upperlimit;
@@ -1999,7 +2382,9 @@
 
     <!-- Search -->
     <script>
-        const searchURL = 'http://192.168.0.143:3000/api/search/rotation/';
+        const searchURL = 'http://10.0.0.65:3000/api/search/rotation/';
+        const host = "http://10.0.0.65:3000"
+        var currentBatch;
 
         addEventListener("keydown", function (event) {
             if (event.keyCode === 13) {
@@ -2016,6 +2401,52 @@
                 rtn += x.elements[i].value;
             }
             querydb(rtn);
+
+            const queryAvgURL = `${host}/api/search/average/csv/${currentBatch}`
+
+            const avgData = await fetch(queryAvgURL);
+            const avggbatch = await avgData.json();
+
+            let avglistt = avggbatch;
+
+            var from = parseInt(rtn);
+            var to = from + 9;
+
+            console.log(from)
+            console.log(to)
+
+            function loadavglist() {
+
+                let i = -1;
+                let j = 1;
+                let k = 0;
+                for (let avgg of avglistt) {
+                    i++;
+                    if (i >= from && i <= to) {
+                        from++;
+                        let avgdataa = avggbatch[i]
+                        console.log(`RTN:${avgdataa[1]},PRE:${avgdataa[2]},MAIN:${avgdataa[3]},EJN:${avgdataa[4]}`);
+
+                        document.getElementById(`rtn-${j}`).innerHTML = avgdataa[1];
+                        graph3.data.labels[k] = avgdataa[1];
+                        document.getElementById(`rtn${j}-pre-search`).innerHTML = avgdataa[2];
+                        graph3.data.datasets[0].data[k] = avgdataa[2];
+                        document.getElementById(`rtn${j}-main-search`).innerHTML = avgdataa[3];
+                        graph3.data.datasets[1].data[k] = avgdataa[3];
+                        document.getElementById(`rtn${j}-ejn-search`).innerHTML = avgdataa[4];
+                        graph3.data.datasets[2].data[k] = avgdataa[4];
+
+                        graph3.update();
+                        k++;
+                        j++;
+                    } else if (i > to) {
+                        // await fetch(generatereportURL);
+                    }
+                }
+            }
+
+            loadavglist();
+
         };
 
         async function querydb(input_rotation) {
@@ -2130,6 +2561,7 @@
 
             graph2.update();
         }
+
     </script>
 
     <!-- Keep app at fullscreen -->
