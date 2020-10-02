@@ -26,6 +26,8 @@ const {
 
 // Serve NPM modules
 app.use('/charts', express.static(__dirname + '/node_modules/chart.js/dist/'));
+app.use('/charts/plugin', express.static(__dirname + '/node_modules/chartjs-plugin-zoom/'));
+app.use('/plugin', express.static(__dirname + '/node_modules/hammerjs//'));
 app.use('/css', express.static(__dirname + '/node_modules/tailwindcss/dist/'));
 app.use('/font', express.static(__dirname + '/node_modules/@fortawesome/fontawesome-free/'));
 

@@ -17,8 +17,10 @@
     <!-- NPM package includes -->
     <link href="/font/css/all.css" rel="stylesheet">
     <script src="/charts/Chart.bundle.min.js"></script>
+    <script src="/charts/plugin/chartjs-plugin-zoom.min.js"></script>
+    <script src="/plugin/hammer.min.js"></script>
     <link href="/css/tailwind.min.css" rel="stylesheet">
-
+    
     <!-- BackGround Info -->
     <style>
         .bg-black-alt {
@@ -71,6 +73,19 @@
             /*Set to match the Tailwind colour you want the active one to be */
         }
     </style>
+
+    <!-- Modal CSS -->
+    <style>
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+
+        body.modal-active {
+            overflow-x: hidden;
+            overflow-y: visible !important;
+        }
+    </style>
+
 
 </head>
 
@@ -655,25 +670,63 @@
                                         <div class="border-b flex-1 flex-row items-center border-gray-800 p-3">
 
                                             <h5 class="font-bold uppercase text-center text-gray-400">Average
-                                                Compression
+                                                Compression History
                                                 <!-- Search Button -->
                                                 <button
-                                                    class="bg-blue-100 uppercase ml-5 text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"
-                                                    onclick="expandAVG()">
-                                                    EXPAND 
+                                                    class="modal-open bg-blue-100 uppercase ml-5 text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded">
+                                                    HISTORY
                                                 </button>
                                             </h5>
 
+                                            <div class="p-5">
+                                                <canvas id="avgcompression_graph" class="chartjs"
+                                                    height="170rem"></canvas>
+                                            </div>
+
                                         </div>
-                                        <div class="p-5">
-                                            <canvas id="avgcompression_graph" class="chartjs" height="170rem"></canvas>
-                                        </div>
+
                                     </div>
                                 </div>
 
-
                             </div>
                         </div>
+
+                        <!--Modal-->
+                        <div
+                            class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+                            <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+                            <div class="modal-container bg-white w-4/5 mx-auto rounded shadow-lg z-50 overflow-y-auto">
+
+                                <!-- Add margin if you want to see some of the overlay behind the modal-->
+                                <div class="modal-content py-4 text-left px-6">
+                                    <!--Title-->
+                                    <div class="flex justify-between items-center pb-3">
+                                        <p class="text-2xl font-bold">Average Compression History</p>
+                                        <div class="modal-close cursor-pointer z-50">
+                                            <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg"
+                                                width="18" height="18" viewBox="0 0 18 18">
+                                                <path
+                                                    d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-5">
+                                        <canvas id="avg_his_compression_graph" height="170rem"></canvas>
+                                    </div>
+
+                                    <!--Footer-->
+                                    <div class="flex justify-end pt-2">
+                                        <button
+                                            class="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400">Close</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
                         <label for="carousel-1"
                             class="prev control-2 w-10 h-10 mb-5 md:ml-5 absolute cursor-pointer hidden text-3xl font-bold opacity-25 text-black rounded-full bg-white hover:opacity-100 leading-tight text-center z-10 inset-y-0 left-0 my-auto">‹</label>
                         <label for="carousel-3"
@@ -962,6 +1015,129 @@
 
         </div>
     </div>
+
+    <!-- modal script -->
+    <script>
+        var openmodal = document.querySelectorAll('.modal-open')
+        for (var i = 0; i < openmodal.length; i++) {
+            openmodal[i].addEventListener('click', function (event) {
+                event.preventDefault()
+                toggleModal()
+            })
+        }
+
+        const overlay = document.querySelector('.modal-overlay')
+        overlay.addEventListener('click', toggleModal)
+
+        var closemodal = document.querySelectorAll('.modal-close')
+        for (var i = 0; i < closemodal.length; i++) {
+            closemodal[i].addEventListener('click', toggleModal)
+        }
+
+        document.onkeydown = function (evt) {
+            evt = evt || window.event
+            var isEscape = false
+            if ("key" in evt) {
+                isEscape = (evt.key === "Escape" || evt.key === "Esc")
+            } else {
+                isEscape = (evt.keyCode === 27)
+            }
+            if (isEscape && document.body.classList.contains('modal-active')) {
+                toggleModal()
+            }
+        };
+
+
+        function toggleModal() {
+            const body = document.querySelector('body')
+            const modal = document.querySelector('.modal')
+            modal.classList.toggle('opacity-0')
+            modal.classList.toggle('pointer-events-none')
+            body.classList.toggle('modal-active')
+        }
+
+
+    </script>
+
+    <!-- Average Compression History graph -->
+    <script>
+
+        var avg_his_graphcanvas = document.getElementById("avg_his_compression_graph").getContext("2d");
+        var avg_his_graphdata = {
+            labels: ["Punch 1B", "Punch 1D", "Punch 2B", "Punch 2D", "Punch 3B", "Punch 3D", "Punch 4B", "Punch 4D"],
+            datasets: [
+                {
+                    label: "Pre Compression",
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: [
+                        "yellow",
+                        "yellow",
+                        "yellow",
+                        "yellow",
+                        "yellow",
+                        "yellow",
+                        "yellow",
+                        "yellow"
+                    ],
+                    borderColor: "#F0F6F7FF",
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [
+                        1,
+                        15,
+                        6,
+                        20,
+                        30,
+                        24,
+                        21,
+                        38,
+                    ],
+                },
+            ],
+        };
+        var avg_his_graphoptions = {
+            responsive: true,
+            tooltips: { enabled: false },
+            hover: { mode: null },
+            showTooltips: false,
+            showLines: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        max: 50
+                    }
+                }],
+            },
+            pan: {
+                enabled: true,
+                mode: "x",
+                speed: 10,
+                threshold: 10
+            },
+            zoom: {
+                enabled: true,
+                drag: false,
+                mode: "x",
+                limits: {
+                    max: 10,
+                    min: 0.5
+                }
+            }
+        };
+        var avg_his_compression_graph = Chart.Bar(avg_his_graphcanvas, {
+            data: avg_his_graphdata,
+            options: avg_his_graphoptions,
+        });
+
+
+    </script>
 
     <!-- APIs -->
     <script>
