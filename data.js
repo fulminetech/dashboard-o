@@ -236,7 +236,7 @@ async function fetchpayload() {
             machine.time.hou = machine1.time.hour;
             machine.time.minute = machine1.time.minute;
             machine.time.second = machine1.time.second;
-            
+
         })
         .catch(err => {
             console.error("[ MODBUS SERVER OFFLINE ]");
@@ -408,15 +408,13 @@ fluxmachine = () => {
 };
 
 var watchproxy = function () {
-    rotation = -1;
     writemachine();
     proxy.watch((err, value) => {
         if (err) {
             throw err;
         }
-        rotation++;
         machine.stats.status = "ONLINE";
-        payload.rotation_no = rotation;
+        payload.rotation_no++;
         writePayload();
     });
 }

@@ -652,10 +652,18 @@
                                 <!--Avg Compression Graph-->
                                 <div class="w-full xl:w-1/2 p-3">
                                     <div class="bg-gray-900 border border-gray-800 rounded shadow">
-                                        <div class="border-b border-gray-800 p-3">
+                                        <div class="border-b flex-1 flex-row items-center border-gray-800 p-3">
+
                                             <h5 class="font-bold uppercase text-center text-gray-400">Average
                                                 Compression
+                                                <!-- Search Button -->
+                                                <button
+                                                    class="bg-blue-100 uppercase ml-5 text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"
+                                                    onclick="expandAVG()">
+                                                    EXPAND 
+                                                </button>
                                             </h5>
+
                                         </div>
                                         <div class="p-5">
                                             <canvas id="avgcompression_graph" class="chartjs" height="170rem"></canvas>
@@ -710,6 +718,9 @@
                                 <!--Search Compression Data table -->
                                 <div class="w-full p-3">
                                     <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                        <div class="border-b border-gray-800 p-3">
+                                            <h5 class="font-bold uppercase text-center text-gray-400">PUNCH DATA</h5>
+                                        </div>
                                         <div class="px-5 pb-5">
                                             <table class="table-auto w-full text-center text-gray-400" height="170rem">
                                                 <thead>
@@ -808,21 +819,24 @@
                                 <!-- Rotationwise Average table -->
                                 <div class="w-full p-3">
                                     <div class="bg-gray-900 border border-gray-800 rounded shadow">
+                                        <div class="border-b border-gray-800 p-3">
+                                            <h5 class="font-bold uppercase text-center text-gray-400">AVERAGE DATA</h5>
+                                        </div>
                                         <div class="px-5 pb-5">
                                             <table class="table-auto w-full text-center text-gray-400" height="170rem">
                                                 <thead>
                                                     <tr class="w-30">
                                                         <th class="text-center py-3">Rotation Number</th>
-                                                        <th id="rtn-1" class="text-center py-3">1</th>
-                                                        <th id="rtn-2" class="text-center py-3">2</th>
-                                                        <th id="rtn-3" class="text-center py-3">3</th>
-                                                        <th id="rtn-4" class="text-center py-3">4</th>
-                                                        <th id="rtn-5" class="text-center py-3">5</th>
-                                                        <th id="rtn-6" class="text-center py-3">6</th>
-                                                        <th id="rtn-7" class="text-center py-3">7</th>
-                                                        <th id="rtn-8" class="text-center py-3">8</th>
-                                                        <th id="rtn-9" class="text-center py-3">9</th>
-                                                        <th id="rtn-10" class="text-center py-3">10</th>
+                                                        <th id="rtn-1" class="text-center py-3"></th>
+                                                        <th id="rtn-2" class="text-center py-3"></th>
+                                                        <th id="rtn-3" class="text-center py-3"></th>
+                                                        <th id="rtn-4" class="text-center py-3"></th>
+                                                        <th id="rtn-5" class="text-center py-3"></th>
+                                                        <th id="rtn-6" class="text-center py-3"></th>
+                                                        <th id="rtn-7" class="text-center py-3"></th>
+                                                        <th id="rtn-8" class="text-center py-3"></th>
+                                                        <th id="rtn-9" class="text-center py-3"></th>
+                                                        <th id="rtn-10" class="text-center py-3"></th>
                                                     </tr>
                                                 </thead>
 
@@ -914,8 +928,8 @@
                                 <div class="w-full xl:w-1/2 p-3">
                                     <div class="bg-gray-900 border border-gray-800 rounded shadow">
                                         <div class="border-b border-gray-800 p-3">
-                                            <h5 class="font-bold uppercase text-center text-gray-400">Search Rotation
-                                                Result</h5>
+                                            <h5 class="font-bold uppercase text-center text-gray-400">PUNCH DATA GRAPH
+                                            </h5>
                                         </div>
                                         <div class="p-5">
                                             <canvas id="compression_search_graph" class="chartjs"
@@ -928,7 +942,7 @@
                                 <div class="w-full xl:w-1/2 p-3">
                                     <div class="bg-gray-900 border border-gray-800 rounded shadow">
                                         <div class="border-b border-gray-800 p-3">
-                                            <h5 class="font-bold uppercase text-center text-gray-400">Average Result
+                                            <h5 class="font-bold uppercase text-center text-gray-400">Average DATA GRAPH
                                             </h5>
                                         </div>
                                         <div class="p-5">

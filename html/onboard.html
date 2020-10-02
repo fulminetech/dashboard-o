@@ -38,7 +38,7 @@
             <p class="text-gray-800 text-4xl uppercase text-bold text-center font-medium">Batch settings</p>
 
             <div class="mt-2">
-                <label class="block text-lg text-gray-900">Name</label>
+                <label class="block text-lg text-gray-900">Operator Name</label>
                 <form id="name">
                     <input class="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded" name="name" type="text"
                         required="" placeholder="Operator Name">
@@ -82,16 +82,20 @@
             </div>
 
             <div class="mt-4 flex justify-center">
-                <label class=" block text-bold text-lg text-gray-900">Continue previous batch</label>
+                <label class=" block text-bold uppercase text-3xl text-gray-900">View Past Batches</label>
             </div>
-
 
             <div class="mt-4 flex justify-center">
                 <button onclick="continuee()"
-                    class="px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded">CONTINUE</button>
+                    class="px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded">ENTER</button>
             </div>
 
-            </form>
+            <p class="text-gray-800 text-2xl mt-4 uppercase text-bold text-center font-medium">Note:</p>
+            
+            <div class="mt-2">
+                <label class="block text-lg text-center text-gray-900">To continue previous batch enter the previous Batch Number, Operator Name and Recepie ID & click START</label>
+            </div>
+
         </div>
     </div>
 
@@ -155,7 +159,7 @@
 
         // // Fetch previous settings are start the dashboard
         async function continuee() {
-            location.href = "/dashboard"
+            location.href = "/reports"
         }
 
     </script>

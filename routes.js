@@ -89,7 +89,6 @@ app.get("/login/image", (req, res) => {
     res.sendFile(path.join(__dirname + "/login.jpeg"));
 });
 
-
 // Routes
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/html/login.html"));
@@ -129,6 +128,17 @@ app.get("/onboard/:namee/:machinee/:recepiee/:batchh", (req, res) => {
     machine.machine_id = b;
     machine.product.recipie_id = c;
     payload.batch = d;
+
+    client.queryRaw(`select "rotation" from "${d}.payload" ORDER BY time DESC LIMIT 1`)
+        .then(data => {
+            var response = data.results[0].series[0].values[0];
+            var previousrtn = parseInt(response[1]);
+            console.log(previousrtn)
+            if (previousrtn > 1) {
+                payload.rotation_no = previousrtn;
+            }
+        })
+        .catch(console.error);
 
     watchproxy();
     startmodbus();
@@ -227,7 +237,7 @@ app.get("/report/average/now", (req, res) => {
     res.send(report);
 })
 
-app.get("/report/average/generate", (req, res) => { 
+app.get("/report/average/generate", (req, res) => {
     (async () => {
         const browser = await puppeteer.launch({ product: 'chrome', executablePath: '/usr/bin/chromium-browser' });
         const page = await browser.newPage();
@@ -250,15 +260,6 @@ app.get("/report/average/download", (req, res) => {
         }
     });
 })
-
-// app.get("/report/average/pdf/move", (req, res) => {
-//     exec(moveReportCommand, (err, stdout, stderr) => {
-//         // handle err if you like!
-//         console.log(`[ MOVING REPORT TO PENDRIVE ]`);
-//         console.log(`${stdout}`);
-//     });
-//     return res.json({ message: 'EXPORTED' });
-// })
 
 app.get("/restart/:what", (req, res) => {
 
@@ -286,31 +287,6 @@ app.get("/restart/:what", (req, res) => {
     }
 
 })
-
-// app.get("/api/continue", (req, res) => {
-
-//     var previousbatch
-//     var previousoperator
-//     var previousmachineid
-//     var previousrecipieid
-
-//     client.showMeasurements()
-//         .then(data => {
-//             var newww = Object.values(data)
-//             previousbatch = newww[newww.length - 1]
-//             payload.batch_number = previousbatch;
-//         })
-//         .catch(console.error);
-
-//     client.query(`${previousbatch}`)
-//         .where('batch', parseInt(payload.batch_number))
-//         .then(data => {
-//             let machineee = Object.values(data.results[0].series[0].values[0])
-
-//         })
-//         .catch(console.error);
-
-// });
 
 // Start Server
 const port = process.env.PORT || 3000;
