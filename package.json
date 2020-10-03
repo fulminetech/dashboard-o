@@ -1,7 +1,7 @@
 {
   "name": "version2",
-  "version": "2.2.1",
-  "description": "Only stats fetch pending",
+  "version": "2.2.2",
+  "description": "Process monitoring, control and analysis dashboard",
   "main": "routes.js",
   "scripts": {
     "install": "npm install",
