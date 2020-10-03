@@ -88,12 +88,15 @@
                 let avgHTML = '';
 
                 let i = -1;
+                let j = 0;
 
                 for (let avgg of avglistt) {
                     i++;
+                    
                     if (i >= from && i <= to) {
                         from++;
-                        let avgdataa = avggbatch[i]
+                        j = i -1;
+                        let avgdataa = avggbatch[j]
                         avgHTML += `<tr><td class="border border-gray-700 px-4 py-2">${avgdataa[1]}</td><td id="p1-pre" class="border border-gray-700 px-4 py-2">${avgdataa[2]}</td><td class="border border-gray-700 px-4 py-2">${avgdataa[3]}</td><td id="p1-ejn" class="border border-gray-700 px-4 py-2">${avgdataa[4]}</td></tr>`
                     } else if (i > to) {
                         // await fetch(generatereportURL);

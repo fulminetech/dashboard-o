@@ -20,7 +20,7 @@
     <script src="/charts/plugin/chartjs-plugin-zoom.min.js"></script>
     <script src="/plugin/hammer.min.js"></script>
     <link href="/css/tailwind.min.css" rel="stylesheet">
-    
+
     <!-- BackGround Info -->
     <style>
         .bg-black-alt {
@@ -673,7 +673,8 @@
                                                 Compression History
                                                 <!-- Search Button -->
                                                 <button
-                                                    class="modal-open bg-blue-100 uppercase ml-5 text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded">
+                                                    class="modal-open bg-blue-100 uppercase ml-5 text-sm hover:bg-blue-500 text-gray-800 font-semibold hover:text-white py-1 px-2 border border-purple-500 hover:border-transparent rounded"
+                                                    onclick="searchhistory()">
                                                     HISTORY
                                                 </button>
                                             </h5>
@@ -702,7 +703,8 @@
                                 <div class="modal-content py-4 text-left px-6">
                                     <!--Title-->
                                     <div class="flex justify-between items-center pb-3">
-                                        <p class="text-2xl font-bold">Average Compression History</p>
+                                        <p id="avg_history" class="text-2xl font-bold">Average Compression History [
+                                            PAST 500 DATA POINTS ] (Loading time upto 10 seconds) </p>
                                         <div class="modal-close cursor-pointer z-50">
                                             <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg"
                                                 width="18" height="18" viewBox="0 0 18 18">
@@ -1061,26 +1063,17 @@
 
     <!-- Average Compression History graph -->
     <script>
-
         var avg_his_graphcanvas = document.getElementById("avg_his_compression_graph").getContext("2d");
         var avg_his_graphdata = {
-            labels: ["Punch 1B", "Punch 1D", "Punch 2B", "Punch 2D", "Punch 3B", "Punch 3D", "Punch 4B", "Punch 4D"],
+            labels: [],
             datasets: [
                 {
                     label: "Pre Compression",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
-                    backgroundColor: [
-                        "yellow",
-                        "yellow",
-                        "yellow",
-                        "yellow",
-                        "yellow",
-                        "yellow",
-                        "yellow",
-                        "yellow"
-                    ],
-                    borderColor: "#F0F6F7FF",
+                    backgroundColor: "yellow",
+                    borderColor: "yellow",
                     pointBorderColor: "rgba(75,192,192,1)",
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: "rgba(75,192,192,1)",
@@ -1088,53 +1081,177 @@
                     pointHoverBorderWidth: 2,
                     pointRadius: 5,
                     pointHitRadius: 10,
-                    data: [
-                        1,
-                        15,
-                        6,
-                        20,
-                        30,
-                        24,
-                        21,
-                        38,
-                    ],
+                    data: [],
+                },
+                {
+                    label: "Main Compression",
+                    yAxisID: 'A',
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: "green",
+                    borderColor: "green",
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [],
+                },
+                {
+                    label: "Ejection Compression",
+                    yAxisID: 'B',
+                    fill: false,
+                    lineTension: 0.1,
+                    backgroundColor: "purple",
+                    borderColor: "purple",
+                    pointBorderColor: "rgba(75,192,192,1)",
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: [],
                 },
             ],
         };
         var avg_his_graphoptions = {
             responsive: true,
-            tooltips: { enabled: false },
-            hover: { mode: null },
-            showTooltips: false,
+            showTooltips: true,
             showLines: true,
             scales: {
                 yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 25,
+                        labelString: 'Compression (kN)'
+                    },
+                    id: 'A',
+                    type: 'linear',
+                    position: 'left',
                     ticks: {
                         beginAtZero: true,
+                        fontSize: 20,
                         max: 50
+                    }
+                }, {
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 25,
+                        labelString: 'Ejection Compression (KG)'
+                    },
+                    id: 'B',
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: 20,
+                        max: 200
+                    }
+                }],
+                xAxes: [{
+                    type: 'time',
+                    //display: false,
+                    time: {
+                        displayFormats: {
+                            millisecond: 'YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'
+                        }
                     }
                 }],
             },
-            pan: {
-                enabled: true,
-                mode: "x",
-                speed: 10,
-                threshold: 10
-            },
-            zoom: {
-                enabled: true,
-                drag: false,
-                mode: "x",
-                limits: {
-                    max: 10,
-                    min: 0.5
+            plugins: {
+                zoom: {
+                    // Container for pan options
+                    pan: {
+                        // Boolean to enable panning
+                        enabled: true,
+
+                        // Panning directions. Remove the appropriate direction to disable 
+                        // Eg. 'y' would only allow panning in the y direction
+                        mode: 'x',
+
+                    },
+
+                    // Container for zoom options
+                    zoom: {
+                        // Boolean to enable zooming
+                        enabled: true,
+
+                        // Zooming directions. Remove the appropriate direction to disable 
+                        // Eg. 'y' would only allow zooming in the y direction
+                        mode: 'x',
+
+                        // Speed of zoom via mouse wheel
+                        // (percentage of zoom on a wheel event)
+                        speed: 0.1,
+
+                        // On category scale, minimal zoom level before actually applying zoom
+                        sensitivity: 3,
+                    }
                 }
-            }
+            },
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    fontSize: 20,
+
+                }
+            },
         };
-        var avg_his_compression_graph = Chart.Bar(avg_his_graphcanvas, {
+        var avg_his_compression_graph = Chart.Line(avg_his_graphcanvas, {
             data: avg_his_graphdata,
             options: avg_his_graphoptions,
         });
+
+        async function searchhistory() {
+
+            const queryAvgURL = `${host}/api/search/average/csv/${currentBatch}`
+
+            const avgData = await fetch(queryAvgURL);
+            const avggbatch = await avgData.json();
+
+            let avglistt = avggbatch;
+
+            var from = currentrotation - 500;
+            var to = currentrotation;
+
+            console.log(from)
+            console.log(to)
+
+            function loadavglist() {
+
+                let i = -1;
+                let j = 1;
+                let k = 0;
+                for (let avgg of avglistt) {
+                    i++;
+                    if (i >= from && i <= to && i > 0) {
+                        from++;
+                        let avgdataa = avggbatch[i]
+                        //console.log(`TIME:${avgdataa[0]},RTN:${avgdataa[1]},PRE:${avgdataa[2]},MAIN:${avgdataa[3]},EJN:${avgdataa[4]}`);
+
+                        avg_his_compression_graph.data.labels[k] = avgdataa[0];
+
+                        avg_his_compression_graph.data.datasets[0].data[k] = avgdataa[2];
+
+                        avg_his_compression_graph.data.datasets[1].data[k] = avgdataa[3];
+
+                        avg_his_compression_graph.data.datasets[2].data[k] = avgdataa[4];
+
+                        avg_his_compression_graph.update();
+                        k++;
+                        j++;
+                    } else if (i > to) {
+                        // await fetch(generatereportURL);
+                    }
+                }
+            }
+
+            loadavglist();
+        };
 
 
     </script>
@@ -1302,7 +1419,6 @@
                     options: {
                         legend: {
                             display: false,
-
                             labels: {
                                 hidden: true
                             }
@@ -1321,7 +1437,7 @@
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        fontSize: 25,
+                        fontSize: 23,
                         labelString: 'Compression (kN)'
                     },
                     id: 'A',
@@ -1330,12 +1446,13 @@
                     ticks: {
                         beginAtZero: true,
                         fontSize: 20,
+                        fontColor: "white",
                         max: 50
                     }
                 }, {
                     scaleLabel: {
                         display: true,
-                        fontSize: 25,
+                        fontSize: 23,
                         labelString: 'Ejection Compression (KG)'
                     },
                     id: 'B',
@@ -1344,22 +1461,26 @@
                     ticks: {
                         beginAtZero: true,
                         fontSize: 20,
+                        fontColor: "white",
                         max: 200
                     }
                 }],
                 xAxes: [{
                     scaleLabel: {
                         display: true,
-                        fontSize: 20,
-                        labelString: 'Punch Number'
                     },
+                    ticks: {
+                        fontSize: 15,
+                        fontColor: "white",
+                    }
                 }],
             },
             legend: {
                 display: true,
                 position: 'bottom',
-                ticks: {
+                labels: {
                     fontSize: 20,
+
                 }
             },
         }
@@ -1783,7 +1904,6 @@
                 yAxes: [{
                     ticks: {
                         beginAtZero: true,
-                        max: 50
                     },
                 }],
                 xAxes: [{
@@ -1808,6 +1928,7 @@
             datasets: [
                 {
                     label: "Pre Compression",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: "#F0F6F7FF",
@@ -1832,6 +1953,7 @@
                 },
                 {
                     label: "Main Compression",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: "#85B3D1FF",
@@ -1862,6 +1984,7 @@
                 },
                 {
                     label: "Ejection",
+                    yAxisID: 'B',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: "#2460A7FF",
@@ -1896,11 +2019,41 @@
             showLines: true,
             scales: {
                 yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 15,
+                        labelString: 'Compression (kN)'
+                    },
+                    id: 'A',
+                    type: 'linear',
+                    position: 'left',
                     ticks: {
                         beginAtZero: true,
+                        fontSize: 10,
                         max: 50
                     }
-                }]
+                }, {
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 15,
+                        labelString: 'Ejection Compression (KG)'
+                    },
+                    id: 'B',
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: 15,
+                        max: 200
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 20,
+                        labelString: 'Punch Number'
+                    },
+                }],
             }
         };
         var graph2 = Chart.Bar(graph2canvas, {
@@ -1914,6 +2067,7 @@
             datasets: [
                 {
                     label: "Pre Compression Average",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: "#F0F6F7FF",
@@ -1940,6 +2094,7 @@
                 },
                 {
                     label: "Main Compression Average",
+                    yAxisID: 'A',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: "#85B3D1FF",
@@ -1972,6 +2127,7 @@
                 },
                 {
                     label: "Ejection Average",
+                    yAxisID: 'B',
                     fill: false,
                     lineTension: 0.1,
                     backgroundColor: "#2460A7FF",
@@ -2008,12 +2164,43 @@
             showLines: true,
             scales: {
                 yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 15,
+                        labelString: 'Compression (kN)'
+                    },
+                    id: 'A',
+                    type: 'linear',
+                    position: 'left',
                     ticks: {
                         beginAtZero: true,
+                        fontSize: 10,
                         max: 50
                     }
-                }]
-            }
+                }, {
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 15,
+                        labelString: 'Ejection Compression (KG)'
+                    },
+                    id: 'B',
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: 15,
+                        max: 200
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        fontSize: 20,
+                        labelString: 'Rotation Number'
+                    },
+                }],
+            },
+
         };
         var graph3 = Chart.Bar(graph3canvas, {
             data: graph3data,
@@ -2035,6 +2222,8 @@
                     currentBatch = payload.batch;
 
                     document.getElementById("rotation_number_metric").innerHTML = payload.rotation_no;
+                    currentrotation = payload.rotation_no;
+
                     document.getElementById("rotation1_number_metric").innerHTML = payload.rotation_no;
                     document.getElementById("punch_number_metric").innerHTML = payload.present_punch;
 
@@ -2575,6 +2764,7 @@
         const searchURL = 'http://10.0.0.65:3000/api/search/rotation/';
         const host = "http://10.0.0.65:3000"
         var currentBatch;
+        var currentrotation;
 
         addEventListener("keydown", function (event) {
             if (event.keyCode === 13) {
@@ -2590,6 +2780,7 @@
             for (i = 0; i < x.length; i++) {
                 rtn += x.elements[i].value;
             }
+            console.log(rtn);
             querydb(rtn);
 
             const queryAvgURL = `${host}/api/search/average/csv/${currentBatch}`
@@ -2610,11 +2801,13 @@
                 let i = -1;
                 let j = 1;
                 let k = 0;
+                let l = 0;
                 for (let avgg of avglistt) {
                     i++;
                     if (i >= from && i <= to) {
+                        l = i - 1;
                         from++;
-                        let avgdataa = avggbatch[i]
+                        let avgdataa = avggbatch[l]
                         console.log(`RTN:${avgdataa[1]},PRE:${avgdataa[2]},MAIN:${avgdataa[3]},EJN:${avgdataa[4]}`);
 
                         document.getElementById(`rtn-${j}`).innerHTML = avgdataa[1];
