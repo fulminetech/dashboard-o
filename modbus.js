@@ -388,19 +388,17 @@ var readstatus = function () {
 }
 
 var readstats = function () {
-    client.readHoldingRegisters(stats_address, 20)
+    client.readHoldingRegisters(stats_address, 22)
         .then(function (stats_data) {
-
-            console.log(stats_data)
-
+            console.log(stats_data.data)
             // // Active Punches
-            // var active_punches = stats_data.data[0]; // 0-255
-            // machine.stats.active_punches = ((active_punches + 1) / 32);
+            // machine.stats.active_punches = ((active_punches + 1) / 32); // if 0-255
+            var active_punches = stats_data.data[0]; 
+            machine.stats.active_punches = active_punches;
 
             // // Current rotation
             // var data_number = stats_data.data[1]; // 32-bit 
             // var data_number_mul = stats_data.data[2]; // Multiplier
-
             // if (data_number_mul == 0) {
             //     payload.data_number = data_number;
             // }
@@ -408,31 +406,33 @@ var readstats = function () {
             //     payload.data_number = ((2 ^ 16 * data_number_mul) + data_number);
             // }
 
-            // // Present Punch
+            // // // Present Punch
             payload.present_punch = stats_data.data[5];
 
-            // // Production count
-            // var count = stats_data.data[6];
-            // var count_mul = stats_data.data[7];
+            // // // Production count
+            // // // Formula: [ punch count x rpm x time ]
 
-            // if (count_mul == 0) {
-            //     machine.stats.count = count;
-            // } else {
-            //     machine.stats.count = ((2 ^ 16 * count_mul) + count);
-            // }
+            var reg1 = stats_data.data[6];
+            var reg2 = stats_data.data[7];
 
-            // // Tablet per hour [ Max: 8x60x60=28800 ]
-            // tablets_per_hour = (machine.stats.active_punches * machine.control.turret_rpm * 60);
-            // machine.stats.tablets_per_hour = tablets_per_hour;
+            if (reg2 == 0) {
+                machine.stats.count = reg1;
+            } else {
+                machine.stats.count = (((2 ** 16) * reg2) + reg1);
+            }
 
-            // machine.control.turret_rpm = stats.data[14];
-
+            // // // Tablet per hour [ Max: 8x60x60=28800 ]
+            tablets_per_hour = (machine.stats.active_punches * machine.control.turret_rpm * 60);
+            machine.stats.tablets_per_hour = tablets_per_hour;
+            
+            machine.control.turret_rpm = stats_data.data[14];
+            
             // // Compression Limits
-            // machine.maincompression_upperlimit = stats_data.data[15];
-            // machine.maincompression_lowerlimit = stats_data.data[16];
-            // machine.precompression_upperlimit = stats_data.data[17];
-            // machine.precompression_lowerlimit = stats_data.data[18];
-            // machine.ejection_upperlimit = stats_data.data[19];
+            machine.maincompression_upperlimit = stats_data.data[15]/100;
+            machine.maincompression_lowerlimit = stats_data.data[16]/100;
+            machine.precompression_upperlimit = stats_data.data[17]/100;
+            machine.precompression_lowerlimit = stats_data.data[18]/100;
+            machine.ejection_upperlimit = stats_data.data[19]/100;
 
             mbsState = MBS_STATE_GOOD_READ_STATS;
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)

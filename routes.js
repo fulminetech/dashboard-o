@@ -268,22 +268,23 @@ app.get("/restart/:what", (req, res) => {
     const a = req.params.what;
 
     if (a == "pm2-0") {
+        res.json({ message: `[ RESTARTING: ${a} ]` });
         exec(restartCommand, (err, stdout, stderr) => {
             // handle err if you like!
             console.log(`[ RESTARTING: prod-routes ]`);
             console.log(`${stdout}`);
         });
     } else if (a == "pm2-1") {
+        res.json({ message: `[ RESTARTING: ${a} ]` });
         exec(restart1Command, (err, stdout, stderr) => {
             // handle err if you like!
-            console.log(`[ RESTARTING: prod-modbus ]`);
             console.log(`${stdout}`);
         });
     }
     else if (a == "device") {
+        res.json({ message: `[ RESTARTING: PI ]` });
         exec(rebootCommand, (err, stdout, stderr) => {
             // handle err if you like!
-            console.log(`[ RESTARTING: PI ]`);
             console.log(`${stdout}`);
         });
     }

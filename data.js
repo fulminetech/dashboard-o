@@ -213,8 +213,8 @@ async function fetchpayload() {
             machine.precompression_lowerlimit = machine1.precompression_lowerlimit;
             machine.ejection_upperlimit = machine1.ejection_upperlimit;
 
-            //machine.stats.count = machine1.count;
-            //machine.stats.tablets_per_hour = machine1.tablets_per_hour;
+            machine.stats.count = machine1.stats.count;
+            machine.stats.tablets_per_hour = machine1.stats.tablets_per_hour;
             //machine.stats.rpm = machine1.rpm;
             //machine.stats.active_punches = machine1.active_punches;
             //machine.stats.mainMotor_trip = machine1.mainMotorTrip;
@@ -227,13 +227,13 @@ async function fetchpayload() {
             // machine.control.machine_start = machine1.control.machine_start;
             // machine.control.machine_stop = machine1.control.machine_stop;
             // machine.control.turret_run = machine1.control.turret_run;
-            // machine.control.turret_rpm = machine1.control.turret_rpm;
+            machine.control.turret_rpm = machine1.control.turret_rpm;
             // machine.control.forceFeeder_rpm = machine1.control.forceFeeder_rpm;
 
             machine.time.date = machine1.time.date;
             machine.time.month = machine1.time.month;
             machine.time.year = machine1.time.year;
-            machine.time.hou = machine1.time.hour;
+            machine.time.hour = machine1.time.hour;
             machine.time.minute = machine1.time.minute;
             machine.time.second = machine1.time.second;
 
