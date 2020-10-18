@@ -1241,7 +1241,6 @@
             loadavglist();
         };
 
-
     </script>
 
     <!-- APIs -->
@@ -1847,7 +1846,7 @@
                 yAxes: [{
                     ticks: {
                         beginAtZero: true,
-                        max: 50
+                        max: 200
                     }
                 }]
             },
@@ -2614,11 +2613,11 @@
 
     <!-- Machine API fetch -->
     <script>
-        var pre_upper = 35;
-        var pre_lower = 10;
-        var main_upper = 40;
-        var main_lower = 10;
-        var ejn_upper = 12;
+        var pre_upper ;
+        var pre_lower ;
+        var main_upper;
+        var main_lower;
+        var ejn_upper ;
 
         var pre_force_line = 25
         var main_force_line = 25
@@ -2650,12 +2649,11 @@
                     document.getElementById("operator_name_metric").innerHTML = machine.operator_name;
                     document.getElementById("recipie_id_metric").innerHTML = machine.product.recipie_id;
                     //document.getElementById("name_metric").innerHTML = machine.product.name;
-
-                    machine.precompression_upperlimit = pre_upper
-                    machine.precompression_lowerlimit = pre_lower
-                    machine.maincompression_upperlimit = main_upper
-                    machine.maincompression_lowerlimit = main_lower
-                    machine.ejection_upperlimit = ejn_upper
+                    pre_upper = machine.precompression_upperlimit;
+                    pre_lower = machine.precompression_lowerlimit;
+                    main_upper = machine.maincompression_upperlimit;
+                    main_lower = machine.maincompression_lowerlimit;
+                    ejn_upper = machine.ejection_upperlimit;
 
                     pregraph.data.datasets[1].data[0] = machine.precompression_upperlimit;
                     pregraph.data.datasets[1].data[1] = machine.precompression_upperlimit;

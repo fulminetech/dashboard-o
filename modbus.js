@@ -326,14 +326,14 @@ var readmain = function () {
 var readejn = function () {
     client.readHoldingRegisters(ejection_address, 8)
         .then(function (ejection) {
-            payload.punch1.ejection = ejection.data[0] / 1000;
-            payload.punch2.ejection = ejection.data[1] / 1000;
-            payload.punch3.ejection = ejection.data[2] / 1000;
-            payload.punch4.ejection = ejection.data[3] / 1000;
-            payload.punch5.ejection = ejection.data[4] / 1000;
-            payload.punch6.ejection = ejection.data[5] / 1000;
-            payload.punch7.ejection = ejection.data[6] / 1000;
-            payload.punch8.ejection = ejection.data[7] / 1000;
+            payload.punch1.ejection = ejection.data[0] / 100;
+            payload.punch2.ejection = ejection.data[1] / 100;
+            payload.punch3.ejection = ejection.data[2] / 100;
+            payload.punch4.ejection = ejection.data[3] / 100;
+            payload.punch5.ejection = ejection.data[4] / 100;
+            payload.punch6.ejection = ejection.data[5] / 100;
+            payload.punch7.ejection = ejection.data[6] / 100;
+            payload.punch8.ejection = ejection.data[7] / 100;
 
             mbsState = MBS_STATE_GOOD_READ_EJN;
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
