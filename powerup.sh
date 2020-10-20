@@ -20,6 +20,12 @@ git clone https://github.com/fulminetech/dashboard-o
 cd dashboard-o    
 npm run install
 
+## NGROK
+#make executable
+chmod +x /home/pi/dashboard-o/ngrok
+#authenticate
+/home/pi/dashboard-o/ngrok authtoken 1j8PqqUL4upC2O3SFkJigL57kXM_bhFyo9KsG7SZYbunNvRs
+
 # Spawn and daemonise systemctl
 #sudo systemctl start influxd && sudo systemctl enable influxd 
 

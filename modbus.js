@@ -463,11 +463,13 @@ function restartprodmodbus() {
 
 app.use("/api/payload", (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.json(payload);
 });
 
 app.use("/api/machine", (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.json(machine);
 });
 

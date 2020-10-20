@@ -1256,8 +1256,21 @@
 
     <!-- APIs -->
     <script>
-        const payloadURL = 'http://10.0.0.65:3000/api/payload';
-        const machineURL = 'http://10.0.0.65:3000/api/machine';
+        var hostname = window.location.host;
+        
+        var payloadURL;
+        var machineURL;
+        var hostt;
+
+        if(hostname == "10.0.0.65:3000"){
+            payloadURL = `http://${hostname}/api/payload`;
+            machineURL = `http://${hostname}/api/machine`;
+            hostt = `http://${hostname}`;
+        } else {
+            payloadURL = `https://${hostname}/api/payload`;
+            machineURL = `https://${hostname}/api/machine`;
+            hostt = `https://${hostname}`;
+        }
     </script>
 
     <!-- Time -->
@@ -2758,8 +2771,7 @@
 
     <!-- Search -->
     <script>
-        const searchURL = 'http://10.0.0.65:3000/api/search/rotation/';
-        const host = "http://10.0.0.65:3000"
+        const searchURL = `${hostt}/api/search/rotation/`;
         var currentBatch;
         var currentrotation;
 
@@ -2780,7 +2792,7 @@
             console.log(rtn);
             querydb(rtn);
 
-            const queryAvgURL = `${host}/api/search/average/csv/${currentBatch}`
+            const queryAvgURL = `${hostt}/api/search/average/csv/${currentBatch}`
 
             const avgData = await fetch(queryAvgURL);
             const avggbatch = await avgData.json();

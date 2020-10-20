@@ -368,9 +368,16 @@
         }, 1000);
     </script>
 
-    <!-- URL -->
+    <!-- APIS -->
     <script>
-        let host = 'http://10.0.0.65:3000'
+        var hostname = window.location.host;
+        var h;
+
+        if (hostname == "10.0.0.65:3000") {
+            host = `http://${hostname}`
+        } else {
+            host = `https://${hostname}`
+        }
     </script>
 
     <!-- Update Batch details -->
@@ -541,7 +548,7 @@
     <script>
         var element = document.getElementById("generatepdfreport");
 
-        var pdfgenerationtime = 5000;
+        var pdfgenerationtime = 10000;
 
         async function generateReport() {
 

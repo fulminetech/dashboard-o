@@ -65,14 +65,20 @@
         </div>
     </div>
 
+    <!-- APIS -->
     <script>
-
-        const restartURL = 'http://10.0.0.65:3000/restart/pm2-0'
-
-        fetch(restartURL)
-            .then(console.log("[ RESTARTING! ]"))
-            .catch(console.error);
-
+    const hostname = window.location.host;
+    //const restartURL = `https://${hostname}/restart/pm2-0`
+    </script>
+    
+    <!-- RESTART ROUTES -->
+    <script>
+       fetch(restartURL)
+         .then(console.log("[ RESTARTING! ]"))
+         .catch(console.error);
+    </script>
+    
+    <script>
         addEventListener("keydown", function (event) {
             if (event.keyCode === 13) {
                 event.preventDefault();
@@ -127,9 +133,7 @@
             }
 
         };
-
     </script>
-
 
 </body>
 
