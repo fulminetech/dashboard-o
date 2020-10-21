@@ -6,17 +6,30 @@ const CronJob = require('cron').CronJob;
 const Gpio = require('onoff').Gpio;
 const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
 
-const host = "10.0.0.65"
+var host = "http://localhost"; 
+var os = require("os");
+var hostname = os.networkInterfaces()
+var ip_address_wifi = hostname.wlan0[0].address;
+var ip_address_4G = hostname.ppp0[0].address;
+// var ip_address = hostname.ppp0[0].address;
+
+// if (ip_address == "10.0.0.65") {
+//     host = "http://localhost"
+// } else {
+//     host = "https://localhost"
+// }
+    
+//console.log(ip_address)
 
 const Influx = require('influxdb-nodejs');
-const flux = new Influx(`http://${host}:8086/new`);
+const flux = new Influx(`${host}:8086/new`);
 
 // Timestamp for which returns current date and time 
 var noww = new Date().toLocaleString(undefined, { timeZone: 'Asia/Kolkata' });
 console.log(`[ STARTING INFLUX : ${noww} ]`)
 
-const payloadURL = `http://${host}:3128/api/payload`;
-const machineURL = `http://${host}:3128/api/machine`;
+const payloadURL = `${host}:3128/api/payload`;
+const machineURL = `${host}:3128/api/machine`;
 var i = 0
 
 var temp_recepie = "DEFAULT";

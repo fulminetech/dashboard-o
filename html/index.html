@@ -1207,7 +1207,7 @@
 
         async function searchhistory() {
 
-            const queryAvgURL = `${host}/api/search/average/csv/${currentBatch}`
+            const queryAvgURL = `${hostt}/api/search/average/csv/${currentBatch}`
 
             const avgData = await fetch(queryAvgURL);
             const avggbatch = await avgData.json();
@@ -1889,8 +1889,8 @@
                     label: "Compression Average",
                     fill: false,
                     lineTension: 0.1,
-                    backgroundColor: "#F0F6F7FF",
-                    borderColor: "#F0F6F7FF",
+                    backgroundColor: [ "yellow","green","purple"],
+                    borderColor: ["yellow", "green", "purple"],
                     pointBorderColor: "rgba(75,192,192,1)",
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: "rgba(75,192,192,1)",

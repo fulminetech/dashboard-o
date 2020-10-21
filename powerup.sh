@@ -12,11 +12,20 @@ sudo npm install n pm2 -g
 
 #Install influx and create database new --> https://docs.influxdata.com/influxdb/v1.8/introduction/install/ sudo systemctl disable influxdb.service then sudo systemctl start influxdb.service
 
+#Clone PPP installer for 4G
+cd ~
+git clone https://github.com/sixfab/Sixfab_PPP_Installer.git
+#cd Sixfab_PPP_Installer/ppp_installer
+#chmod +x install.sh
+#Note: vodafone apn - portalnmms port - ttyUSB3
+
+#install dataplicity
+
 #Clone Dashboard
 cd ~
 git clone https://github.com/fulminetech/dashboard-o
 
-# To start the service
+# Install node packages
 cd dashboard-o    
 npm run install
 

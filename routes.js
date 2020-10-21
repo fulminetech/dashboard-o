@@ -13,7 +13,7 @@ const restart1Command = "pm2 restart prod-modbus"
 
 const rebootCommand = "sudo reboot -h now"
 
-const host = "10.0.0.65"
+const host = "localhost"
 
 // Influx Imports
 const Influx = require('influxdb-nodejs');
