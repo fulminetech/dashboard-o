@@ -21,6 +21,9 @@ git clone https://github.com/sixfab/Sixfab_PPP_Installer.git
 
 #install dataplicity
 
+#Download argon app
+
+
 #Clone Dashboard
 cd ~
 git clone https://github.com/fulminetech/dashboard-o

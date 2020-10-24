@@ -9,8 +9,8 @@ const proxy = new Gpio(26, 'in', 'falling', { debounceTimeout: 10 });
 var host = "http://localhost"; 
 var os = require("os");
 var hostname = os.networkInterfaces()
-var ip_address_wifi = hostname.wlan0[0].address;
-var ip_address_4G = hostname.ppp0[0].address;
+//var ip_address_wifi = hostname.wlan0[0].address;
+//var ip_address_4G = hostname.ppp0[0].address;
 // var ip_address = hostname.ppp0[0].address;
 
 // if (ip_address == "10.0.0.65") {
@@ -45,6 +45,9 @@ var machine = {
     precompression_upperlimit: 0,
     precompression_lowerlimit: 0,
     ejection_upperlimit: 0,
+    main_forceline: 0,
+    pre_forceline: 0,
+    ejn_forceline: 0,
     product: {
         recipie_id: temp_recepie,
         name: temp_productname,
@@ -203,7 +206,6 @@ async function fetchpayload() {
             payload.precompression_avg = payload1.precompression_avg;
             payload.maincompression_avg = payload1.maincompression_avg;
             payload.ejection_avg = payload1.ejection_avg;
-
         })
         .catch(err => {
             console.error("[ MODBUS SERVER OFFLINE ]");
@@ -225,6 +227,10 @@ async function fetchpayload() {
             machine.precompression_upperlimit = machine1.precompression_upperlimit;
             machine.precompression_lowerlimit = machine1.precompression_lowerlimit;
             machine.ejection_upperlimit = machine1.ejection_upperlimit;
+
+            machine.main_forceline = machine1.main_forceline;  
+            machine.pre_forceline = machine1.pre_forceline;
+            machine.ejn_forceline = machine1.ejn_forceline;  
 
             machine.stats.count = machine1.stats.count;
             machine.stats.tablets_per_hour = machine1.stats.tablets_per_hour;

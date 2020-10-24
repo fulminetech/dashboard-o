@@ -35,6 +35,9 @@ var machine = {
     precompression_upperlimit: 0,
     precompression_lowerlimit: 0,
     ejection_upperlimit: 0,
+    main_forceline: 0,
+    pre_forceline: 0,
+    ejn_forceline: 0,
     stats: {
         count: 0,
         tablets_per_hour: 0,
@@ -148,10 +151,10 @@ var MBS_STATE_FAIL_CONNECT = "State fail (port)";
 var mbsState = MBS_STATE_INIT;
 
 var mbsTimeout = 1000;
-var mbsScan = 75;
+var mbsScan = 35;
 
 let readfailed = 0;
-let failcounter = 5;
+let failcounter = 15;
 
 let timecheck = 3;
 let timetemp = 0;
@@ -349,9 +352,10 @@ var readejn = function () {
 var readavg = function () {
     client.readHoldingRegisters(avg_address, 3)
         .then(function (avg) {
+            console.log(avg.data)
             payload.maincompression_avg = avg.data[0] / 100;
-            payload.precompression_avg = avg.data[1] / 100;
-            payload.ejection_avg = avg.data[2] / 100;
+            payload.ejection_avg = avg.data[1] / 100;
+            payload.precompression_avg = avg.data[2] / 100;
 
             mbsState = MBS_STATE_GOOD_READ_AVG;
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)
@@ -388,7 +392,7 @@ var readstatus = function () {
 }
 
 var readstats = function () {
-    client.readHoldingRegisters(stats_address, 22)
+    client.readHoldingRegisters(stats_address, 25)
         .then(function (stats_data) {
             console.log(stats_data.data)
             // // Active Punches
@@ -425,7 +429,7 @@ var readstats = function () {
             tablets_per_hour = (machine.stats.active_punches * machine.control.turret_rpm * 60);
             machine.stats.tablets_per_hour = tablets_per_hour;
             
-            machine.control.turret_rpm = stats_data.data[14];
+            machine.control.turret_rpm = stats_data.data[14] / 10;
             
             // // Compression Limits
             machine.maincompression_upperlimit = stats_data.data[15]/100;
@@ -433,6 +437,10 @@ var readstats = function () {
             machine.precompression_upperlimit = stats_data.data[17]/100;
             machine.precompression_lowerlimit = stats_data.data[18]/100;
             machine.ejection_upperlimit = stats_data.data[19]/100;
+
+            machine.main_forceline = stats_data.data[22] / 100;
+            machine.pre_forceline = stats_data.data[23] / 100;
+            machine.ejn_forceline = stats_data.data[24] / 100;
 
             mbsState = MBS_STATE_GOOD_READ_STATS;
             // console.log(`${(+ new Date() - startTime) / 1000} : ${mbsState}`)

@@ -114,7 +114,7 @@
                     </li>
 
                     <!-- Control Panel -->
-                    <li class="mr-6 my-2 md:my-0">
+                    <!-- <li class="mr-6 my-2 md:my-0">
                         <a href="/control"
                             class="block py-1 md:py-3 pl-1 align-middle text-gray-600 no-underline hover:text-gray-100 border-b-2 border-gray-900  hover:border-green-400">
                             <i class="fas fa-chart-area fa-fw mr-3"></i>
@@ -122,7 +122,7 @@
                                 Control
                             </span>
                         </a>
-                    </li>
+                    </li> -->
 
                 </ul>
 
@@ -417,13 +417,13 @@
                                                 <h5 class="font-bold text-2xl uppercase text-gray-400">Pre Comp.
                                                     Upper Tolerance:
                                                     <a id="precompression_upperlimit_metric"
-                                                        class="font-bold text-2xl text-gray-500">10
+                                                        class="font-bold text-2xl text-gray-500">
                                                     </a>
                                                 </h5>
                                                 <h5 class="font-bold text-2xl uppercase text-gray-400">Pre Comp.
                                                     Lower Tolerance:
                                                     <a id="precompression_lowerlimit_metric"
-                                                        class="font-bold text-2xl text-gray-500">17
+                                                        class="font-bold text-2xl text-gray-500">
                                                     </a>
                                                 </h5>
                                             </div>
@@ -444,13 +444,13 @@
                                                 <h5 class="font-bold text-2xl uppercase text-gray-400">Main Comp.
                                                     Upper Tolerance:
                                                     <a id="maincompression_upperlimit_metric"
-                                                        class="font-bold text-2xl text-gray-500">10
+                                                        class="font-bold text-2xl text-gray-500">
                                                     </a>
                                                 </h5>
                                                 <h5 class="font-bold text-2xl uppercase text-gray-400">Main Comp.
                                                     Lower Tolerance:
                                                     <a id="maincompression_lowerlimit_metric"
-                                                        class="font-bold text-2xl text-gray-500">17
+                                                        class="font-bold text-2xl text-gray-500">
                                                     </a>
                                                 </h5>
                                             </div>
@@ -1256,21 +1256,16 @@
 
     <!-- APIs -->
     <script>
-        var hostname = window.location.host;
+        var hostname = "10.0.0.65:3000";
         
         var payloadURL;
         var machineURL;
         var hostt;
 
-        if(hostname == "10.0.0.65:3000"){
             payloadURL = `http://${hostname}/api/payload`;
             machineURL = `http://${hostname}/api/machine`;
             hostt = `http://${hostname}`;
-        } else {
-            payloadURL = `https://${hostname}/api/payload`;
-            machineURL = `https://${hostname}/api/machine`;
-            hostt = `https://${hostname}`;
-        }
+        
     </script>
 
     <!-- Time -->
@@ -1628,7 +1623,7 @@
                 yAxes: [{
                     ticks: {
                         beginAtZero: true,
-                        max: 50
+                        max: 20
                     }
                 }],
             },
@@ -2632,7 +2627,7 @@
 
         setInterval(() => {
             fetchpayloadapiHF();
-        }, 223);
+        }, 103);
     </script>
 
     <!-- Machine API fetch -->
@@ -2667,7 +2662,7 @@
 
                     document.getElementById("count_metric").innerHTML = machine.stats.count;
                     document.getElementById("production_per_hour_metric").innerHTML = machine.stats.tablets_per_hour;
-                    document.getElementById("rpm_metric").innerHTML = machine.stats.rpm;
+                    document.getElementById("rpm_metric").innerHTML = machine.control.turret_rpm;
                     // document.getElementById("uptime_metric").innerHTML = machine.stats.uptime;
 
                     document.getElementById("operator_name_metric").innerHTML = machine.operator_name;
@@ -2724,32 +2719,32 @@
                     ejngraph.data.datasets[1].data[6] = machine.ejection_upperlimit;
                     ejngraph.data.datasets[1].data[7] = machine.ejection_upperlimit;
 
-                    pregraph.data.datasets[3].data[0] = pre_force_line;
-                    pregraph.data.datasets[3].data[1] = pre_force_line;
-                    pregraph.data.datasets[3].data[2] = pre_force_line;
-                    pregraph.data.datasets[3].data[3] = pre_force_line;
-                    pregraph.data.datasets[3].data[4] = pre_force_line;
-                    pregraph.data.datasets[3].data[5] = pre_force_line;
-                    pregraph.data.datasets[3].data[6] = pre_force_line;
-                    pregraph.data.datasets[3].data[7] = pre_force_line;
+                    pregraph.data.datasets[3].data[0] = machine.pre_forceline;
+                    pregraph.data.datasets[3].data[1] = machine.pre_forceline;
+                    pregraph.data.datasets[3].data[2] = machine.pre_forceline;
+                    pregraph.data.datasets[3].data[3] = machine.pre_forceline;
+                    pregraph.data.datasets[3].data[4] = machine.pre_forceline;
+                    pregraph.data.datasets[3].data[5] = machine.pre_forceline;
+                    pregraph.data.datasets[3].data[6] = machine.pre_forceline;
+                    pregraph.data.datasets[3].data[7] = machine.pre_forceline;
 
-                    maingraph.data.datasets[3].data[0] = main_force_line;
-                    maingraph.data.datasets[3].data[1] = main_force_line;
-                    maingraph.data.datasets[3].data[2] = main_force_line;
-                    maingraph.data.datasets[3].data[3] = main_force_line;
-                    maingraph.data.datasets[3].data[4] = main_force_line;
-                    maingraph.data.datasets[3].data[5] = main_force_line;
-                    maingraph.data.datasets[3].data[6] = main_force_line;
-                    maingraph.data.datasets[3].data[7] = main_force_line;
+                    maingraph.data.datasets[3].data[0] = machine.main_forceline;
+                    maingraph.data.datasets[3].data[1] = machine.main_forceline;
+                    maingraph.data.datasets[3].data[2] = machine.main_forceline;
+                    maingraph.data.datasets[3].data[3] = machine.main_forceline;
+                    maingraph.data.datasets[3].data[4] = machine.main_forceline;
+                    maingraph.data.datasets[3].data[5] = machine.main_forceline;
+                    maingraph.data.datasets[3].data[6] = machine.main_forceline;
+                    maingraph.data.datasets[3].data[7] = machine.main_forceline;
 
-                    ejngraph.data.datasets[2].data[0] = ejn_force_line;
-                    ejngraph.data.datasets[2].data[1] = ejn_force_line;
-                    ejngraph.data.datasets[2].data[2] = ejn_force_line;
-                    ejngraph.data.datasets[2].data[3] = ejn_force_line;
-                    ejngraph.data.datasets[2].data[4] = ejn_force_line;
-                    ejngraph.data.datasets[2].data[5] = ejn_force_line;
-                    ejngraph.data.datasets[2].data[6] = ejn_force_line;
-                    ejngraph.data.datasets[2].data[7] = ejn_force_line;
+                    ejngraph.data.datasets[2].data[0] = machine.ejn_forceline;
+                    ejngraph.data.datasets[2].data[1] = machine.ejn_forceline;
+                    ejngraph.data.datasets[2].data[2] = machine.ejn_forceline;
+                    ejngraph.data.datasets[2].data[3] = machine.ejn_forceline;
+                    ejngraph.data.datasets[2].data[4] = machine.ejn_forceline;
+                    ejngraph.data.datasets[2].data[5] = machine.ejn_forceline;
+                    ejngraph.data.datasets[2].data[6] = machine.ejn_forceline;
+                    ejngraph.data.datasets[2].data[7] = machine.ejn_forceline;
 
                     document.getElementById("precompression_upperlimit_metric").innerHTML = machine.precompression_upperlimit;
                     document.getElementById("precompression_lowerlimit_metric").innerHTML = machine.precompression_lowerlimit;
